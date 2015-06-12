@@ -10,7 +10,7 @@ namespace saudfhub
 {
     class Conexao
     {
-        static string nomeBase = Path.Combine(ApplicationData.Current.LocalFolder.Path,"saudf.sqlite");
+        static string nomeBase = Path.Combine(ApplicationData.Current.LocalFolder.Path, "saudf.sqlite");
 
         private static async Task<bool> VerificarBanco(string nomeBanco)
         {
@@ -27,7 +27,7 @@ namespace saudfhub
 
             return bancoCriado;
         }
-       
+
         private static void CriarBaseDeDados()
         {
             using (var db = new SQLiteConnection(nomeBase))
@@ -37,7 +37,8 @@ namespace saudfhub
             }
         }
 
-        public static void CriaBaseDeDadosSeNaoExistir(){
+        public static void CriaBaseDeDadosSeNaoExistir()
+        {
             if (!VerificarBanco(nomeBase).Result)
             {
                 CriarBaseDeDados();
@@ -53,7 +54,8 @@ namespace saudfhub
             return sConn;
         }
 
-        public static void inserirRegistrosDeUnidadesNaBaseDeDados(){
+        public static void inserirRegistrosDeUnidadesNaBaseDeDados()
+        {
             Conexao.Conn().Query<Unidade>("INSERT INTO Unidade (Nome, Latitude, Longitude, Telefone, Endereco, Bairro, Tipo) VALUES('CSG 01 GAMA','-16.0115647315974','-48.0734467506395','(61) 34843540','QUADRA','GAMA SUL','UBS')");
             Conexao.Conn().Query<Unidade>("INSERT INTO Unidade (Nome, Latitude, Longitude, Telefone, Endereco, Bairro, Tipo) VALUES('PSU SAMAMBAIA QUADRA 317','-15.8906614780421','-48.1121778488145','(61) 34597151','QN 317 CJ 01 LT 01 AE','SAMAMBAIA','UBS')");
             Conexao.Conn().Query<Unidade>("INSERT INTO Unidade (Nome, Latitude, Longitude, Telefone, Endereco, Bairro, Tipo) VALUES('UBS SERRA AZUL','-15.6358623504634','-47.8468751907335','(61) 34854898','DF 420 KM 01 QUADRA 03 AE 01','SOBRADINHO','UBS')");
@@ -221,3 +223,4 @@ namespace saudfhub
 
         }
     }
+}
