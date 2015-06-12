@@ -71,7 +71,18 @@
     </Page.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <Hub x:Name="Hub" x:Uid="Hub" Header="application name" Background="{ThemeResource HubBackgroundImageBrush}">
+        <Hub x:Name="Hub" x:Uid="Hub" Background="{ThemeResource HubBackgroundImageBrush}">
+            <Hub.Header>
+                <Grid Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="/Assets/hearth.png" Margin="0,0,0,0" />
+                    <TextBlock x:Name="pageTitle" Text="SaúDF" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+ IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                </Grid>
+            </Hub.Header>
             <HubSection x:Uid="HubSection1" Header="SECTION 1" DataContext="{Binding Groups}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
                     <ListView
