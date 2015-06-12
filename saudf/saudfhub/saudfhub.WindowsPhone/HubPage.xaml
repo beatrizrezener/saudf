@@ -22,7 +22,7 @@
             </ResourceDictionary.ThemeDictionaries>
 
             <DataTemplate x:Key="HubSectionHeaderTemplate">
-                <TextBlock Margin="0,0,0,-9.5" Text="{Binding}"/>
+                <TextBlock Margin="0,10,0,-9.5" Text="{Binding}"/>
             </DataTemplate>
 
             <!-- Grid-appropriate item template as seen in section 2 -->
@@ -71,19 +71,20 @@
     </Page.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <Hub x:Name="Hub" x:Uid="Hub" Background="{ThemeResource HubBackgroundImageBrush}">
+        <Hub x:Name="Hub" x:Uid="Hub" Background="Black">
             <Hub.Header>
                 <Grid Margin="0,20,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Source="/Assets/hearth.png" Margin="0,0,0,0" />
+                    <Image Source="/Assets/hearthwhite.png" Margin="0,0,0,0" />
                     <TextBlock x:Name="pageTitle" Text="SaúDF" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
  IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Top" Margin="10,0,0,0"/>
                 </Grid>
             </Hub.Header>
-            <HubSection x:Uid="HubSection1" Header="SECTION 1" DataContext="{Binding Groups}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
+           
+            <!--<HubSection x:Uid="HubSection1" Header="SECTION 1" DataContext="{Binding Groups}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
                     <ListView
                         ItemsSource="{Binding}"
@@ -99,9 +100,9 @@
                         </ListView.ItemTemplate>
                     </ListView>
                 </DataTemplate>
-            </HubSection>
+            </HubSection>-->
 
-            <HubSection x:Uid="HubSection2" Header="SECTION 2" Width="Auto"
+            <!--<HubSection x:Uid="HubSection2" Header="SECTION 2" Width="Auto"
                          DataContext="{Binding Groups[0]}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
                     <GridView
@@ -137,8 +138,24 @@
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                     </ListView>
                 </DataTemplate>
-            </HubSection>
+            </HubSection> -->
 
+            <HubSection x:Uid="HubSectionUnidadeMaisProxima" Header="Unidade de Saúde mais próxima"
+                        DataContext="{Binding Groups[2]}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
+                <DataTemplate>
+                    <Grid>
+                        <StackPanel>
+                            <Button Content="Get GPS location" Click="Button_Click"/>
+                            <TextBlock Text="Sua localização:" FontSize="28" Margin="0,20,0,0"/>
+                            <TextBlock x:Name="geolocation" Text="Localização" FontSize="28"/>
+                            <TextBlock Text="Unidade mais próxima:" FontSize="28" Margin="0,20,0,0"/>
+                            <TextBlock x:Name="unidadeMaisProxima" Text="Unidade ABC" FontSize="28"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+
+            </HubSection>
+            
             <HubSection x:Uid="HubSection4" Header="SECTION 4"
                         DataContext="{Binding Groups[2]}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
@@ -162,7 +179,7 @@
                 </DataTemplate>
             </HubSection>
 
-            <HubSection x:Uid="HubSection5" Header="SECTION 5"
+            <!--<HubSection x:Uid="HubSection5" Header="SECTION 5"
                         DataContext="{Binding Groups[3]}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
                     <ListView 
@@ -176,7 +193,7 @@
                         ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                     </ListView>
                 </DataTemplate>
-            </HubSection>
+            </HubSection>-->
         </Hub>
     </Grid>
 </Page>

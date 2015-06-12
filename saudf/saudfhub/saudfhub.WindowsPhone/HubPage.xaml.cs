@@ -1,19 +1,22 @@
 ﻿using saudfhub.Common;
 using saudfhub.Data;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Resources;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.Services.Maps;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Maps;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
@@ -122,6 +125,71 @@ namespace saudfhub
             {
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MapService.ServiceToken = "9sS3k8A_lN-OP2NWhVxW5g";
+            ShowMyPosition();
+        }
+
+        private async void ShowMyPosition()
+        {
+            Geolocator geolocator = new Geolocator();
+            //geolocator.DesiredAccuracyInMeters = 50;
+            Geoposition geoposition = null;
+            TextBlock geolocation = BuscarControleFilho<TextBlock>(Hub, "geolocation") as TextBlock;
+            try
+            {
+                geoposition = await geolocator.GetGeopositionAsync(
+                    maximumAge: TimeSpan.FromMinutes(5),
+                    timeout: TimeSpan.FromSeconds(10));
+                geolocation.Text = "GPS:" + geoposition.Coordinate.Point.Position.Latitude.ToString("0.0000000") + ", " + geoposition.Coordinate.Point.Position.Longitude.ToString("0.0000000");
+            }
+            catch (Exception)
+            {
+                // Handle errors like unauthorized access to location
+                // services or no Internet access.
+                geolocation.Text = "Error";
+            }
+
+            //MapControl myMapControl = BuscarControleFilho<MapControl>(Hub, "myMapControl") as MapControl;
+
+            //myMapControl.Center = geoposition.Coordinate.Point;
+            //myMapControl.ZoomLevel = 15;
+
+            //MapIcon mapIcon = new MapIcon();
+            //mapIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/PinkPushPin.png"));
+            //mapIcon.NormalizedAnchorPoint = new Point(0.25, 0.9);
+            //mapIcon.Location = geoposition.Coordinate.Point;
+            //mapIcon.Title = "You are here";
+            //myMapControl.MapElements.Add(mapIcon);
+        }
+
+        private DependencyObject BuscarControleFilho<T>(DependencyObject controle, string controleFilho)
+        {
+            int childNumber = VisualTreeHelper.GetChildrenCount(controle);
+            for (int i = 0; i < childNumber; i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(controle, i);
+                FrameworkElement fe = child as FrameworkElement;
+                // Not a framework element or is null
+                if (fe == null) return null;
+
+                if (child is T && fe.Name == controleFilho)
+                {
+                    // Found the control so return
+                    return child;
+                }
+                else
+                {
+                    // Not found it - search children
+                    DependencyObject nextLevel = BuscarControleFilho<T>(child, controleFilho);
+                    if (nextLevel != null)
+                        return nextLevel;
+                }
+            }
+            return null;
         }
 
         #region NavigationHelper registration
