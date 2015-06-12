@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
 
-  <Identity Name="c8fd8354-e558-487a-8b59-089cff778e09"
+  <Identity Name="3a7d9a4f-49f9-4565-ad13-a824f634da49"
             Publisher="CN=beatriz.rezener"
             Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="c8fd8354-e558-487a-8b59-089cff778e09" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="3a7d9a4f-49f9-4565-ad13-a824f634da49" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>saudf.WindowsPhone</DisplayName>
+    <DisplayName>saudfhub.WindowsPhone</DisplayName>
     <PublisherDisplayName>beatriz.rezener</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -25,12 +25,12 @@
   <Applications>
     <Application Id="App"
         Executable="$targetnametoken$.exe"
-        EntryPoint="saudf.WindowsPhone.App">
+        EntryPoint="saudfhub.WindowsPhone.App">
         <m3:VisualElements
-            DisplayName="saudf.WindowsPhone"
+            DisplayName="saudfhub.WindowsPhone"
             Square150x150Logo="Assets\Logo.png"
             Square44x44Logo="Assets\SmallLogo.png"
-            Description="saudf.WindowsPhone"
+            Description="saudfhub.WindowsPhone"
             ForegroundText="light"
             BackgroundColor="transparent">
             <m3:DefaultTile Wide310x150Logo="Assets\WideLogo.png" Square71x71Logo="Assets\Square71x71Logo.png"/>

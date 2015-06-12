@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
 
-  <Identity Name="cc63a95d-81d8-4096-8c22-4e76d70a5229"
+  <Identity Name="23439781-a588-410a-824d-9e611af8845f"
             Publisher="CN=beatriz.rezener"
             Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>saudf.Windows</DisplayName>
+    <DisplayName>saudfhub.Windows</DisplayName>
     <PublisherDisplayName>beatriz.rezener</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -23,12 +23,12 @@
   <Applications>
     <Application Id="App"
         Executable="$targetnametoken$.exe"
-        EntryPoint="saudf.Windows.App">
+        EntryPoint="saudfhub.Windows.App">
         <m2:VisualElements
-            DisplayName="saudf.Windows"
+            DisplayName="saudfhub.Windows"
             Square150x150Logo="Assets\Logo.png"
             Square30x30Logo="Assets\SmallLogo.png"
-            Description="saudf.Windows"
+            Description="saudfhub.Windows"
             ForegroundText="light"
             BackgroundColor="#464646">
             <m2:SplashScreen Image="Assets\SplashScreen.png" />

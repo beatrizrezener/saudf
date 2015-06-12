@@ -15,10 +15,11 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using saudfhub.Common;
 
-// The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
+// The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
-namespace saudf
+namespace saudfhub
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -30,7 +31,7 @@ namespace saudf
 #endif
 
         /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
+        /// Initializes the singleton instance of the <see cref="App"/> class. This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
@@ -45,7 +46,7 @@ namespace saudf
         /// search results, and so forth.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -63,12 +64,24 @@ namespace saudf
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
 
+                //Associate the frame with a SuspensionManager key                                
+                SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
+
                 // TODO: change this value to a cache size that is appropriate for your application
                 rootFrame.CacheSize = 1;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    // TODO: Load state from previously suspended application
+                    // Restore the saved session state only when appropriate
+                    try
+                    {
+                        await SuspensionManager.RestoreAsync();
+                    }
+                    catch (SuspensionManagerException)
+                    {
+                        // Something went wrong restoring state.
+                        // Assume there is no state and continue
+                    }
                 }
 
                 // Place the frame in the current Window
@@ -95,7 +108,7 @@ namespace saudf
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                if (!rootFrame.Navigate(typeof(HubPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
@@ -124,13 +137,10 @@ namespace saudf
         /// without knowing whether the application will be terminated or resumed with the contents
         /// of memory still intact.
         /// </summary>
-        /// <param name="sender">The source of the suspend request.</param>
-        /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-
-            // TODO: Save application state and stop any background activity
+            await SuspensionManager.SaveAsync();
             deferral.Complete();
         }
     }
