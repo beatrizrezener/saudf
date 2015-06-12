@@ -166,6 +166,43 @@ namespace saudfhub
             //myMapControl.MapElements.Add(mapIcon);
         }
 
+        private static Double rad2deg(Double rad)
+        {
+            return (rad / Math.PI * 180.0);
+        }
+
+        private static Double deg2rad(Double deg)
+        {
+            return (deg * Math.PI / 180.0);
+        }
+
+        private double computeDistanceBetweenTwoLatLon(double fromLat, double fromLon, double toLat, double toLon)
+        {
+            //If the same point
+            if ((fromLat == toLat) && (fromLon == toLon))
+            {
+                return 0.0;
+            }
+            // Compute the distance with the haversine formula
+            var distanceRad = Math.Acos(Math.Sin(deg2rad(fromLat)) * Math.Sin(deg2rad(toLat)) +
+                        Math.Cos(deg2rad(fromLat)) * Math.Cos(deg2rad(toLat)) *
+                        Math.Cos(deg2rad(fromLon - toLon)));
+            var distanceDegree = rad2deg(distanceRad);
+            // Distance in miles and KM - Add others if needed
+            var miles = (double)distanceDegree * 69.0;
+            var kilometers = (double)miles * 1.61;
+            // return km = miles * 1.61
+            return Math.Round(kilometers, 2);
+        }
+
+        private static void showUnidadeMaisProxima()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+
+            }
+        }
+
         private DependencyObject BuscarControleFilho<T>(DependencyObject controle, string controleFilho)
         {
             int childNumber = VisualTreeHelper.GetChildrenCount(controle);
