@@ -2,6 +2,7 @@
 using saudfhub.Data;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -133,11 +134,13 @@ namespace saudfhub
             ShowMyPosition();
         }
 
+        private Geoposition geoposition;
+
         private async void ShowMyPosition()
         {
             Geolocator geolocator = new Geolocator();
             //geolocator.DesiredAccuracyInMeters = 50;
-            Geoposition geoposition = null;
+            geoposition = null;
             TextBlock geolocation = BuscarControleFilho<TextBlock>(Hub, "geolocation") as TextBlock;
             try
             {
@@ -164,14 +167,15 @@ namespace saudfhub
             //mapIcon.Location = geoposition.Coordinate.Point;
             //mapIcon.Title = "You are here";
             //myMapControl.MapElements.Add(mapIcon);
+            showUnidadeMaisProxima();
         }
 
-        private static Double rad2deg(Double rad)
+        private Double rad2deg(Double rad)
         {
             return (rad / Math.PI * 180.0);
         }
 
-        private static Double deg2rad(Double deg)
+        private Double deg2rad(Double deg)
         {
             return (deg * Math.PI / 180.0);
         }
@@ -195,12 +199,52 @@ namespace saudfhub
             return Math.Round(kilometers, 2);
         }
 
-        private static void showUnidadeMaisProxima()
+        private void showUnidadeMaisProxima()
         {
-            for (int i = 0; i < 5; i++)
-            {
+            List<Unidade> unidadesProximas = new List<Unidade>();
+            Unidade u1 = new Unidade();
+            u1.Nome = "Hospital Santa Marta";
+            u1.Endereco = "Taguatinga";
+            u1.Latitude = "-15.859855";
+            u1.Longitude = "-48.042606";
+            unidadesProximas.Add(u1);
+            Unidade u2 = new Unidade();
+            u2.Nome = "Hospital Santa Helena";
+            u2.Endereco = "Asa Norte";
+            u2.Latitude = "-15.735693";
+            u2.Longitude = "-47.897239";
+            unidadesProximas.Add(u2);
+            Unidade u3 = new Unidade();
+            u3.Nome = "Hospital Anchieta";
+            u3.Endereco = "Taguatinga";
+            u3.Latitude = "-15.823967";
+            u3.Longitude = "-48.066628";
+            unidadesProximas.Add(u3);
+                
+            var fromLatFloat = double.Parse(geoposition.Coordinate.Point.Position.Latitude.ToString("0.0000000"), CultureInfo.InvariantCulture); 
+            var fromLonFloat = double.Parse(geoposition.Coordinate.Point.Position.Longitude.ToString("0.0000000"), CultureInfo.InvariantCulture);
 
+            var usMaisProxima = new Unidade();
+            double menor = 20000;
+
+            for (int i = 0; i < 3; i++)
+            {
+                var usCorrente = unidadesProximas[i];
+
+                var toLatFloat = double.Parse(usCorrente.Latitude, CultureInfo.InvariantCulture);
+                var toLonFloat = double.Parse(usCorrente.Longitude, CultureInfo.InvariantCulture);
+
+                var distance = computeDistanceBetweenTwoLatLon(fromLatFloat, fromLonFloat, toLatFloat, toLonFloat);
+                if (distance < menor)
+                {
+                    menor = distance;
+                    usMaisProxima = usCorrente;
+                }
             }
+
+            TextBlock unidadeMaisProxima = BuscarControleFilho<TextBlock>(Hub, "unidadeMaisProxima") as TextBlock;
+            unidadeMaisProxima.Text = usMaisProxima.Nome + "\n" + usMaisProxima.Endereco;
+
         }
 
         private DependencyObject BuscarControleFilho<T>(DependencyObject controle, string controleFilho)
