@@ -245,9 +245,6 @@ namespace saudfhub
 
             MapControl myMapControl = BuscarControleFilho<MapControl>(HubSaudf, "myMapControl") as MapControl;
 
-            myMapControl.Center = geoposition.Coordinate.Point;
-            myMapControl.ZoomLevel = 15;
-
             MapIcon mapIcon = new MapIcon();
             mapIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/PinkPushPin.png"));
             mapIcon.NormalizedAnchorPoint = new Point(0.25, 0.9);
@@ -261,6 +258,9 @@ namespace saudfhub
             mapIcon.Location = toPoint;
             mapIcon.Title = usMaisProxima.Nome;
             myMapControl.MapElements.Add(mapIcon);
+
+            myMapControl.Center = toPoint;//geoposition.Coordinate.Point;
+            myMapControl.ZoomLevel = 15;
 
         }
 
