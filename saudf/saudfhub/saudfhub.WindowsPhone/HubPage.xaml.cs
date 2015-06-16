@@ -23,6 +23,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using System.Diagnostics;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -38,7 +39,7 @@ namespace saudfhub
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
 
         public HubPage()
-        {
+        {//Desenvolvido como projeto de conclusao do concurso S2B 1º/2015 - MIC Brasilia/DF
             this.InitializeComponent();
 
             // Hub is only supported in Portrait orientation
@@ -49,6 +50,9 @@ namespace saudfhub
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+
+            ListView listViewUS = BuscarControleFilho<ListView>(HubSaudf, "ListViewUnidadeSaude") as ListView;
+            listViewUS.ItemsSource = new UnidadeDAO().Listar();
         }
 
         /// <summary>
@@ -138,7 +142,7 @@ namespace saudfhub
             Geolocator geolocator = new Geolocator();
             //geolocator.DesiredAccuracyInMeters = 50;
             Geoposition geoposition = null;
-            TextBlock geolocation = BuscarControleFilho<TextBlock>(Hub, "geolocation") as TextBlock;
+            TextBlock geolocation = BuscarControleFilho<TextBlock>(HubSaudf, "geolocation") as TextBlock;
             try
             {
                 geoposition = await geolocator.GetGeopositionAsync(

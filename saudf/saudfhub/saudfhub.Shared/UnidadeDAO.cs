@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Diagnostics;
 
 namespace saudfhub
 {
     class UnidadeDAO
     {
         public List<Unidade> Listar()
-        {    
+        {
+            //Debug.WriteLine("estou aqui!");
             return Conexao.Conn().Table<Unidade>().ToList();
         }
 

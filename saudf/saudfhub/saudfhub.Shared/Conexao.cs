@@ -5,13 +5,15 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using System.Diagnostics;
 
 namespace saudfhub
 {
     class Conexao
     {
-        static string nomeBase = Path.Combine(ApplicationData.Current.LocalFolder.Path, "saudf.sqlite");
-
+        static string nomeBanco = "saudf.sqlite";
+        static string caminhoBanco = Path.Combine(ApplicationData.Current.LocalFolder.Path, nomeBanco);
+        
         private static async Task<bool> VerificarBanco(string nomeBanco)
         {
             bool bancoCriado = true;
@@ -19,37 +21,40 @@ namespace saudfhub
             try
             {
                 await ApplicationData.Current.LocalFolder.GetFileAsync(nomeBanco);
+                
             }
             catch (Exception)
             {
                 bancoCriado = false;
             }
-
+            Debug.WriteLine(bancoCriado);
             return bancoCriado;
         }
 
         private static void CriarBaseDeDados()
         {
-            using (var db = new SQLiteConnection(nomeBase))
+            using (var db = new SQLiteConnection(caminhoBanco))
             {
                 db.CreateTable<Unidade>();
+            }
+        }
+        private static int a = 0;
+        public static void CriaBaseDeDadosSeNaoExistir()
+        {
+            if (!VerificarBanco(nomeBanco).Result)
+            {   
+                CriarBaseDeDados();
                 inserirRegistrosDeUnidadesNaBaseDeDados();
             }
         }
-
-        public static void CriaBaseDeDadosSeNaoExistir()
-        {
-            if (!VerificarBanco(nomeBase).Result)
-            {
-                CriarBaseDeDados();
-            }
-        }
-
+        
         public static SQLiteConnection Conn()
         {
+            a++;
+            Debug.WriteLine("entrou aqui " + a + " vezes");
             CriaBaseDeDadosSeNaoExistir();
 
-            SQLiteConnection sConn = new SQLiteConnection(nomeBase);
+            SQLiteConnection sConn = new SQLiteConnection(caminhoBanco);
 
             return sConn;
         }

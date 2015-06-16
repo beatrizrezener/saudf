@@ -71,7 +71,7 @@
     </Page.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <Hub x:Name="Hub" x:Uid="Hub" Background="Black">
+        <Hub x:Name="HubSaudf" x:Uid="Hub01" Background="Black">
             <Hub.Header>
                 <Grid Margin="0,20,0,0">
                     <Grid.ColumnDefinitions>
@@ -156,7 +156,7 @@
 
             </HubSection>
             
-            <HubSection x:Uid="HubSection4" Header="SECTION 4"
+            <HubSection x:Uid="HubSectionBuscaUS" Header="Busca de Unidade de Saúde"
                         DataContext="{Binding Groups[2]}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
                     <ListView 
@@ -166,12 +166,13 @@
                         IsItemClickEnabled="True"
                         ItemsSource="{Binding Items}"
                         ItemClick="ItemView_ItemClick"
-                        ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                        ContinuumNavigationTransitionInfo.ExitElementContainer="True"
+                        Name="ListViewUnidadeSaude">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,19">
-                                    <TextBlock Text="{Binding Title}" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
-                                    <TextBlock Text="{Binding Subtitle}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
+                                    <TextBlock Text="{Binding Nome}" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
+                                    <TextBlock Text="{Binding Telefone}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
