@@ -14,20 +14,19 @@ namespace saudfhub
         static string nomeBanco = "saudf.sqlite";
         static string caminhoBanco = Path.Combine(ApplicationData.Current.LocalFolder.Path, nomeBanco);
         
-        private static async Task<bool> VerificarBanco(string nomeBanco)
+        private static async Task<bool> VerificarBanco()
         {
             bool bancoCriado = true;
 
             try
             {
-                await ApplicationData.Current.LocalFolder.GetFileAsync(nomeBanco);
-                
+                await ApplicationData.Current.LocalFolder.GetFileAsync(nomeBanco).AsTask().ConfigureAwait(false);
             }
             catch (Exception)
             {
                 bancoCriado = false;
             }
-            Debug.WriteLine(bancoCriado);
+
             return bancoCriado;
         }
 
@@ -38,10 +37,10 @@ namespace saudfhub
                 db.CreateTable<Unidade>();
             }
         }
-        private static int a = 0;
+
         public static void CriaBaseDeDadosSeNaoExistir()
         {
-            if (!VerificarBanco(nomeBanco).Result)
+            if (!VerificarBanco().Result)
             {   
                 CriarBaseDeDados();
                 inserirRegistrosDeUnidadesNaBaseDeDados();
@@ -50,8 +49,6 @@ namespace saudfhub
         
         public static SQLiteConnection Conn()
         {
-            a++;
-            Debug.WriteLine("entrou aqui " + a + " vezes");
             CriaBaseDeDadosSeNaoExistir();
 
             SQLiteConnection sConn = new SQLiteConnection(caminhoBanco);

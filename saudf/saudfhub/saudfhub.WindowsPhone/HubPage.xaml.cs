@@ -51,11 +51,20 @@ namespace saudfhub
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
-
-            ListView listViewUS = BuscarControleFilho<ListView>(HubSaudf, "ListViewUnidadeSaude") as ListView;
-            listViewUS.ItemsSource = new UnidadeDAO().Listar();
         }
 
+        public void Unidades_Loaded(object sender, RoutedEventArgs e)
+        {
+            var listView = (ListView)sender;
+            //List<Unidade> l = new UnidadeDAO().Listar();
+
+            //foreach (var item in l)
+            //{
+            //    Debug.WriteLine(item.Nome);
+            //}
+
+            listView.ItemsSource = new UnidadeDAO().Listar();
+        }
         /// <summary>
         /// Gets the <see cref="NavigationHelper"/> associated with this <see cref="Page"/>.
         /// </summary>
@@ -145,8 +154,8 @@ namespace saudfhub
             Geolocator geolocator = new Geolocator();
             //geolocator.DesiredAccuracyInMeters = 50;
 
-            Geoposition geoposition = null;
-            TextBlock geolocation = BuscarControleFilho<TextBlock>(HubSaudf, "geolocation") as TextBlock;
+            geoposition = null;
+
             try
             {
                 geoposition = await geolocator.GetGeopositionAsync(

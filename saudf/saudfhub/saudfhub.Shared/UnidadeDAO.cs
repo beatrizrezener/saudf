@@ -11,14 +11,12 @@ namespace saudfhub
     {
         public List<Unidade> Listar()
         {
-            //Debug.WriteLine("estou aqui!");
             return Conexao.Conn().Table<Unidade>().ToList();
         }
 
         public static List<Unidade> Listar(string nome)
         {
             return Conexao.Conn().Table<Unidade>().Where(x => x.Nome.Contains(nome)).ToList();
-            //return Conexao.Conn().Query<Unidade>("SELECT * FROM Unidade WHERE Nome = ?", nome).ToList();
         }
 
         public List<Unidade> Listar(string porNome, string eBairro)
