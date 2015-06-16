@@ -108,6 +108,7 @@
   <ItemGroup>
     <Content Include="Assets\hearthwhite.png" />
     <Content Include="Assets\Logo.scale-240.png" />
+    <Content Include="Assets\PinkPushPin.png" />
     <Content Include="Assets\saudf.png" />
     <Content Include="Assets\hearth.png" />
     <Content Include="Assets\SmallLogo.scale-240.png" />
