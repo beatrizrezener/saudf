@@ -147,26 +147,13 @@ namespace saudfhub
                 geoposition = await geolocator.GetGeopositionAsync(
                     maximumAge: TimeSpan.FromMinutes(5),
                     timeout: TimeSpan.FromSeconds(10));
-                geolocation.Text = "GPS:" + geoposition.Coordinate.Point.Position.Latitude.ToString("0.0000000") + ", " + geoposition.Coordinate.Point.Position.Longitude.ToString("0.0000000");
             }
             catch (Exception)
             {
                 // Handle errors like unauthorized access to location
                 // services or no Internet access.
-                geolocation.Text = "Error";
             }
 
-            //MapControl myMapControl = BuscarControleFilho<MapControl>(Hub, "myMapControl") as MapControl;
-
-            //myMapControl.Center = geoposition.Coordinate.Point;
-            //myMapControl.ZoomLevel = 15;
-
-            //MapIcon mapIcon = new MapIcon();
-            //mapIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/PinkPushPin.png"));
-            //mapIcon.NormalizedAnchorPoint = new Point(0.25, 0.9);
-            //mapIcon.Location = geoposition.Coordinate.Point;
-            //mapIcon.Title = "You are here";
-            //myMapControl.MapElements.Add(mapIcon);
             showUnidadeMaisProxima();
         }
 
@@ -242,8 +229,24 @@ namespace saudfhub
                 }
             }
 
-            TextBlock unidadeMaisProxima = BuscarControleFilho<TextBlock>(Hub, "unidadeMaisProxima") as TextBlock;
-            unidadeMaisProxima.Text = usMaisProxima.Nome + "\n" + usMaisProxima.Endereco;
+            MapControl myMapControl = BuscarControleFilho<MapControl>(Hub, "myMapControl") as MapControl;
+
+            myMapControl.Center = geoposition.Coordinate.Point;
+            myMapControl.ZoomLevel = 15;
+
+            MapIcon mapIcon = new MapIcon();
+            mapIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/PinkPushPin.png"));
+            mapIcon.NormalizedAnchorPoint = new Point(0.25, 0.9);
+            
+            BasicGeoposition queryHint = new BasicGeoposition();
+            queryHint.Latitude = double.Parse(usMaisProxima.Latitude, CultureInfo.InvariantCulture);
+            queryHint.Longitude = double.Parse(usMaisProxima.Longitude, CultureInfo.InvariantCulture);
+
+            Geopoint toPoint = new Geopoint(queryHint);
+
+            mapIcon.Location = toPoint;
+            mapIcon.Title = usMaisProxima.Nome;
+            myMapControl.MapElements.Add(mapIcon);
 
         }
 
