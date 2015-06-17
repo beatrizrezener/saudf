@@ -11,6 +11,7 @@ using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
 using Windows.Services.Maps;
 using Windows.Storage.Streams;
+using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -33,6 +34,7 @@ namespace saudfhub
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private Unidade unidade = new Unidade();
+        public Geoposition currentPosition { get; set; }
 
         public UnidadeMapaPage()
         {
@@ -138,5 +140,66 @@ namespace saudfhub
         }
 
         #endregion
+
+        private void Click_TracarRota(object sender, RoutedEventArgs e)
+        {
+            ShowRotaNoMapa();
+        }
+
+        private async void ShowRotaNoMapa()
+        {
+            Geolocator geolocator = new Geolocator();
+            currentPosition = null;
+            try
+            {
+                currentPosition = await geolocator.GetGeopositionAsync(
+                    maximumAge: TimeSpan.FromMinutes(5),
+                    timeout: TimeSpan.FromSeconds(10));
+            }
+            catch (Exception)
+            {
+                // Handle errors like unauthorized access to location
+                // services or no Internet access.
+            }
+
+            // Start
+            BasicGeoposition startLocation = new BasicGeoposition();
+            startLocation.Latitude = currentPosition.Coordinate.Point.Position.Latitude;
+            startLocation.Longitude = currentPosition.Coordinate.Point.Position.Longitude;
+            Geopoint startPoint = new Geopoint(startLocation);
+
+            // End
+            BasicGeoposition endLocation = new BasicGeoposition();
+            endLocation.Latitude = -15.890103578567;
+            endLocation.Longitude = -48.142154216765;
+
+            Geopoint endPoint = new Geopoint(endLocation);
+
+            // Get the route between the points.
+            MapRouteFinderResult routeResult =
+                await MapRouteFinder.GetDrivingRouteAsync(
+                startPoint,
+                endPoint,
+                MapRouteOptimization.Time,
+                MapRouteRestrictions.None);
+
+            if (routeResult.Status == MapRouteFinderStatus.Success)
+            {
+                // Use the route to initialize a MapRouteView.
+                MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
+                viewOfRoute.RouteColor = Colors.Yellow;
+                viewOfRoute.OutlineColor = Colors.Black;
+
+                // Add the new MapRouteView to the Routes collection
+                // of the MapControl.
+                myMapControl.Routes.Add(viewOfRoute);
+
+                // Fit the MapControl to the route.
+                await myMapControl.TrySetViewBoundsAsync(
+                    routeResult.Route.BoundingBox,
+                    null,
+                    Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
+            }
+        }
     }
 }

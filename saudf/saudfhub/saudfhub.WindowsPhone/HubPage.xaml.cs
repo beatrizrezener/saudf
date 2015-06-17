@@ -38,6 +38,7 @@ namespace saudfhub
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
+        private Geoposition geoposition;
 
         public HubPage()
         {//Desenvolvido como projeto de conclusao do concurso S2B 1º/2015 - MIC Brasilia/DF
@@ -49,20 +50,11 @@ namespace saudfhub
             this.NavigationCacheMode = NavigationCacheMode.Required;
 
             this.navigationHelper = new NavigationHelper(this);
-            this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
-            this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
         }
 
         public void Unidades_Loaded(object sender, RoutedEventArgs e)
         {
             var listView = (ListView)sender;
-            //List<Unidade> l = new UnidadeDAO().Listar();
-
-            //foreach (var item in l)
-            //{
-            //    Debug.WriteLine(item.Nome);
-            //}
-
             listView.ItemsSource = new UnidadeDAO().Listar();
         }
         /// <summary>
@@ -80,37 +72,6 @@ namespace saudfhub
         public ObservableDictionary DefaultViewModel
         {
             get { return this.defaultViewModel; }
-        }
-
-        /// <summary>
-        /// Populates the page with content passed during navigation.  Any saved state is also
-        /// provided when recreating a page from a prior session.
-        /// </summary>
-        /// <param name="sender">
-        /// The source of the event; typically <see cref="NavigationHelper"/>
-        /// </param>
-        /// <param name="e">Event data that provides both the navigation parameter passed to
-        /// <see cref="Frame.Navigate(Type, object)"/> when this page was initially requested and
-        /// a dictionary of state preserved by this page during an earlier
-        /// session.  The state will be null the first time a page is visited.</param>
-        private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
-        {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var sampleDataGroups = await SampleDataSource.GetGroupsAsync();
-            this.DefaultViewModel["Groups"] = sampleDataGroups;
-        }
-
-        /// <summary>
-        /// Preserves state associated with this page in case the application is suspended or the
-        /// page is discarded from the navigation cache.  Values must conform to the serialization
-        /// requirements of <see cref="SuspensionManager.SessionState"/>.
-        /// </summary>
-        /// <param name="sender">The source of the event; typically <see cref="NavigationHelper"/></param>
-        /// <param name="e">Event data that provides an empty dictionary to be populated with
-        /// serializable state.</param>
-        private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
-        {
-            // TODO: Save the unique state of the page here.
         }
 
         /// <summary>
@@ -146,8 +107,6 @@ namespace saudfhub
             MapService.ServiceToken = "9sS3k8A_lN-OP2NWhVxW5g";
             ShowMyPosition();
         }
-
-        private Geoposition geoposition;
 
         private async void ShowMyPosition()
         {
@@ -259,7 +218,7 @@ namespace saudfhub
             mapIcon.Title = usMaisProxima.Nome;
             myMapControl.MapElements.Add(mapIcon);
 
-            myMapControl.Center = toPoint;//geoposition.Coordinate.Point;
+            myMapControl.Center = toPoint;
             myMapControl.ZoomLevel = 15;
 
         }
