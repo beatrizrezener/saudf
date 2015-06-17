@@ -7,6 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Phone" Label="Ligar para unidade" Click="Click_LigarUnidade"/>
+        </CommandBar>
+    </Page.BottomAppBar>
 
     <Grid x:Name="LayoutRoot">
 
@@ -42,7 +48,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <TextBlock Text="Telefone:" FontSize="24"/>
-                    <TextBlock x:Name="TextBlockTelefone" Text="(99) 9999-9999"  Margin="10,0,0,0" FontSize="24" Width="256"/>
+                    <TextBlock x:Name="TextBlockTelefone" Text="(99) 9999-9999"  Margin="10,0,0,0" FontSize="24" Width="164"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <TextBlock Text="Endereço:" FontSize="24"/>

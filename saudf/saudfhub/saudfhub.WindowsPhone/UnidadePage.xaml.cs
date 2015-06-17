@@ -124,5 +124,10 @@ namespace saudfhub
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
         }
+
+        private void Click_LigarUnidade(object sender, RoutedEventArgs e)
+        {
+            Windows.ApplicationModel.Calls.PhoneCallManager.ShowPhoneCallUI("99999999", "UNIDADE GAMA");
+        }
     }
 }
