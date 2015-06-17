@@ -10,7 +10,7 @@
     
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Icon="Phone" Label="Ligar para unidade" Click="Click_LigarUnidade"/>
+            <AppBarButton Icon="Phone" Label="Ligar" Click="Click_LigarUnidade"/>
         </CommandBar>
     </Page.BottomAppBar>
 
