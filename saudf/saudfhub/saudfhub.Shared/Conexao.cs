@@ -12,42 +12,22 @@ namespace saudfhub
     class Conexao
     {
         static string nomeBanco = "saudf.sqlite";
-        static string caminhoBanco = "caminhoInvalido";
-        //static string caminhoBanco = "ms-appdata:///DataModel/saudf.sqlite";
-        //static string caminhoBanco = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, @"DataModel\saudf.sqlite");
-        //Uri uri = new System.Uri("ms-appx:///DataModel/saudf.sqlite");
+        static string caminhoBanco = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "saudf.sqlite");
 
-        private static async Task<bool> VerificarBanco()
+        private static async Task<bool> BancoJaExiste()
         {
-            bool bancoCriado = true;
-
+            bool isDatabaseExisting = false;
             try
             {
-                await ApplicationData.Current.LocalFolder.GetFileAsync(nomeBanco).AsTask().ConfigureAwait(false);
+                StorageFile storageFile = await ApplicationData.Current.LocalFolder.GetFileAsync(nomeBanco);
+                isDatabaseExisting = true;
             }
-            catch (Exception)
+            catch
             {
-                bancoCriado = false;
+                isDatabaseExisting = false;
             }
 
-            return bancoCriado;
-        }
-
-        private static void CriarBaseDeDados()
-        {
-            using (var db = new SQLiteConnection(caminhoBanco))
-            {
-                db.CreateTable<Unidade>();
-            }
-        }
-
-        public static void CriaBaseDeDadosSeNaoExistir()
-        {
-            if (!VerificarBanco().Result)
-            {   
-                CriarBaseDeDados();
-                inserirRegistrosDeUnidadesNaBaseDeDados();
-            }
+            return isDatabaseExisting;
         }
 
         private static async Task<string> FazCopiaDoBanco()
@@ -68,7 +48,13 @@ namespace saudfhub
 
         public static SQLiteConnection Conn()
         {
-            //CriaBaseDeDadosSeNaoExistir();
+
+            if (BancoJaExiste().Result)
+            {
+                SQLiteConnection sConn = new SQLiteConnection(caminhoBanco);
+                return sConn;
+            }
+
             string resultado = FazCopiaDoBanco().Result;
 
             if (resultado != null)
