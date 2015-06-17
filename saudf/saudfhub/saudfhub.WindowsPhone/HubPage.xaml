@@ -85,24 +85,6 @@
                 </Grid>
             </Hub.Header>
 
-            <!--<HubSection x:Uid="HubSection1" Header="SECTION 1" DataContext="{Binding Groups}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
-                <DataTemplate>
-                    <ListView
-                        ItemsSource="{Binding}"
-                        IsItemClickEnabled="True"
-                        ItemClick="GroupSection_ItemClick"
-                        ContinuumNavigationTransitionInfo.ExitElementContainer="True">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Margin="0,0,0,27.5">
-                                    <TextBlock Text="{Binding Title}" Style="{ThemeResource ListViewItemTextBlockStyle}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </DataTemplate>
-            </HubSection>-->
-
             <HubSection x:Uid="HubSectionUnidadeMaisProxima" Header="Unidade de Saúde mais próxima"
 				DataContext="{Binding Groups[2]}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
@@ -117,9 +99,8 @@
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
-
             </HubSection>
-
+            
             <HubSection x:Uid="HubSectionBuscaUS" Header="Busca de Unidade de Saúde" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
                     <ListView
@@ -140,22 +121,6 @@
                     </ListView>
                 </DataTemplate>
             </HubSection>
-
-            <!--<HubSection x:Uid="HubSection5" Header="SECTION 5"
-                        DataContext="{Binding Groups[3]}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
-                <DataTemplate>
-                    <ListView 
-                        AutomationProperties.AutomationId="ItemListViewSection5"
-                        AutomationProperties.Name="Items In Group"
-                        SelectionMode="None"
-                        IsItemClickEnabled="True"
-                        ItemsSource="{Binding Items}"
-                        ItemTemplate="{StaticResource StandardDoubleLineItemTemplate}"
-                        ItemClick="ItemView_ItemClick"
-                        ContinuumNavigationTransitionInfo.ExitElementContainer="True">
-                    </ListView>
-                </DataTemplate>
-            </HubSection>-->
         </Hub>
     </Grid>
 </Page>
