@@ -71,7 +71,8 @@ namespace saudfhub
             //this.DefaultViewModel["Item"] = item;
             TextBlockNome.Text = (unidade as Unidade).Nome;
             TextBlockTelefone.Text = (unidade as Unidade).Telefone;
-            TextBlockEndereco.Text= (unidade as Unidade).Endereco;
+            TextBlockEndereco.Text = (unidade as Unidade).Bairro + " " + (unidade as Unidade).Endereco;
+            TextBlockTipo.Text = (unidade as Unidade).Tipo;
         }
 
         /// <summary>
