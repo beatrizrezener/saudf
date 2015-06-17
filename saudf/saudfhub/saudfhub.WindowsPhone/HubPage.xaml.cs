@@ -54,6 +54,16 @@ namespace saudfhub
 
         public void Unidades_Loaded(object sender, RoutedEventArgs e)
         {
+            BasicGeoposition queryHint = new BasicGeoposition();
+            queryHint.Latitude = -15.780148200000;
+            queryHint.Longitude = -47.92916980000001;
+
+            Geopoint pointBSB = new Geopoint(queryHint);
+
+            MapControl myMapControl = BuscarControleFilho<MapControl>(HubSaudf, "myMapControl") as MapControl;
+            myMapControl.Center = pointBSB;
+            myMapControl.ZoomLevel = 10;
+    
             var listView = (ListView)sender;
             listView.ItemsSource = new UnidadeDAO().Listar();
         }
