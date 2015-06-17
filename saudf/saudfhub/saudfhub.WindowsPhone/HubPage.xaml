@@ -132,6 +132,7 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,19">
+                                    <TextBlock Text="{Binding IdUnidade}" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
                                     <TextBlock Text="{Binding Nome}" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
                                     <TextBlock Text="{Binding Telefone}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
                                 </StackPanel>
