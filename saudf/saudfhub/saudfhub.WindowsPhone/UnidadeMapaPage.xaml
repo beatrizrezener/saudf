@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Icon="Map" Label="Traçar Rota"/>
+            <AppBarButton Icon="Map" Label="Traçar Rota" Click="Click_TracarRota"/>
         </CommandBar>
     </Page.BottomAppBar>
 
@@ -33,13 +33,13 @@
                 <Image Source="/Assets/hearthwhite.png" Width="40" />
                 <TextBlock x:Uid="Header" Text="SaúDF" Style="{ThemeResource TitleTextBlockStyle}" Margin="5,12,0,10" />
             </StackPanel>
-            <TextBlock x:Name="TextBlockNome" FontSize="30" Text="Nome da Unidade" TextWrapping="Wrap" Margin="0,0,0,26.5" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+            <TextBlock x:Name="TextBlockNome" FontSize="30" Text="Nome da Unidade" TextWrapping="Wrap" Margin="0,10,0,10" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
 
-            <Maps:MapControl x:Name="myMapControl" MapServiceToken="9sS3k8A_lN-OP2NWhVxW5g" HorizontalAlignment="Left" VerticalAlignment="Top" Height="441" Width="362"/>
+            <Maps:MapControl x:Name="myMapControl" MapServiceToken="9sS3k8A_lN-OP2NWhVxW5g" HorizontalAlignment="Left" VerticalAlignment="Top" Height="469" Width="362"/>
 
         </Grid>
     </Grid>
