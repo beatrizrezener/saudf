@@ -1,16 +1,20 @@
 ﻿using saudfhub.Common;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel.Resources;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.Services.Maps;
+using Windows.Storage.Streams;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Maps;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
@@ -24,14 +28,13 @@ namespace saudfhub
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class UnidadePage : Page
+    public sealed partial class UnidadeMapaPage : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
-        private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
         private Unidade unidade = new Unidade();
 
-        public UnidadePage()
+        public UnidadeMapaPage()
         {
             this.InitializeComponent();
 
@@ -70,12 +73,31 @@ namespace saudfhub
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            MapService.ServiceToken = "9sS3k8A_lN-OP2NWhVxW5g";
             unidade = new UnidadeDAO().Buscar((int)e.NavigationParameter);
-            //this.DefaultViewModel["Item"] = item;
             TextBlockNome.Text = (unidade as Unidade).Nome;
-            TextBlockTelefone.Text = (unidade as Unidade).Telefone;
-            TextBlockEndereco.Text = (unidade as Unidade).Bairro + " " + (unidade as Unidade).Endereco;
-            TextBlockTipo.Text = (unidade as Unidade).Tipo;
+            showUnidadeNoMapa();
+        }
+
+        private void showUnidadeNoMapa()
+        {
+            MapIcon mapIcon = new MapIcon();
+            mapIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/PinkPushPin.png"));
+            mapIcon.NormalizedAnchorPoint = new Point(0.25, 0.9);
+
+            BasicGeoposition queryHint = new BasicGeoposition();
+            queryHint.Latitude = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
+            queryHint.Longitude = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
+
+            Geopoint toPoint = new Geopoint(queryHint);
+
+            mapIcon.Location = toPoint;
+            mapIcon.Title = unidade.Nome;
+            myMapControl.MapElements.Add(mapIcon);
+
+            myMapControl.Center = toPoint;
+            myMapControl.ZoomLevel = 15;
+
         }
 
         /// <summary>
@@ -116,13 +138,5 @@ namespace saudfhub
         }
 
         #endregion
-
-        private void Click_VerNoMapa(object sender, RoutedEventArgs e)
-        {
-            if (!Frame.Navigate(typeof(UnidadeMapaPage), unidade.IdUnidade))
-            {
-                throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
-            }
-        }
     }
 }

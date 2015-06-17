@@ -48,7 +48,7 @@
                     <TextBlock Text="Endereço:" FontSize="24"/>
                     <TextBlock x:Name="TextBlockEndereco" Text="Quadra 999 Bairro XYZ Lote 99" TextWrapping="Wrap"  Margin="10,0,0,0" FontSize="24" Width="262"/>
                 </StackPanel>
-                <Button Content="" Width="82" Height="39" HorizontalAlignment="Stretch" Margin="126,20,126.667,0" BorderThickness="0">
+                <Button Content=""  HorizontalAlignment="Stretch" Margin="126,40,126.667,0" BorderThickness="0" Height="33" Click="Click_VerNoMapa">
                     <Button.Background>
                         <ImageBrush Stretch="Fill" ImageSource="Assets/ver_no_mapa.png"/>
                     </Button.Background>
