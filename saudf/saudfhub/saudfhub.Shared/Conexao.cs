@@ -12,8 +12,11 @@ namespace saudfhub
     class Conexao
     {
         static string nomeBanco = "saudf.sqlite";
-        static string caminhoBanco = Path.Combine(ApplicationData.Current.LocalFolder.Path, nomeBanco);
-        
+        static string caminhoBanco = "caminhoInvalido";
+        //static string caminhoBanco = "ms-appdata:///DataModel/saudf.sqlite";
+        //static string caminhoBanco = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, @"DataModel\saudf.sqlite");
+        //Uri uri = new System.Uri("ms-appx:///DataModel/saudf.sqlite");
+
         private static async Task<bool> VerificarBanco()
         {
             bool bancoCriado = true;
@@ -46,14 +49,37 @@ namespace saudfhub
                 inserirRegistrosDeUnidadesNaBaseDeDados();
             }
         }
-        
+
+        private static async Task<string> FazCopiaDoBanco()
+        {
+            try
+            {
+                StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(@"ms-appx:///DataModel/saudf.sqlite")).AsTask().ConfigureAwait(false);
+                StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+                //await file.CopyAsync(folder).AsTask().ConfigureAwait(false);
+                string caminho = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "saudf.sqlite");
+                return caminho;
+            }
+            catch(Exception) 
+            {
+                return null;
+            }
+        }
+
         public static SQLiteConnection Conn()
         {
             CriaBaseDeDadosSeNaoExistir();
+            string resultado = FazCopiaDoBanco().Result;
 
-            SQLiteConnection sConn = new SQLiteConnection(caminhoBanco);
-
-            return sConn;
+            if (resultado != null)
+            {
+                SQLiteConnection sConn = new SQLiteConnection(caminhoBanco);
+                return sConn;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public static void inserirRegistrosDeUnidadesNaBaseDeDados()
