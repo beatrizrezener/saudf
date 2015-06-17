@@ -56,7 +56,7 @@ namespace saudfhub
             {
                 StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(@"ms-appx:///DataModel/saudf.sqlite")).AsTask().ConfigureAwait(false);
                 StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                //await file.CopyAsync(folder).AsTask().ConfigureAwait(false);
+                await file.CopyAsync(folder).AsTask().ConfigureAwait(false);
                 string caminho = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "saudf.sqlite");
                 return caminho;
             }
@@ -68,7 +68,7 @@ namespace saudfhub
 
         public static SQLiteConnection Conn()
         {
-            CriaBaseDeDadosSeNaoExistir();
+            //CriaBaseDeDadosSeNaoExistir();
             string resultado = FazCopiaDoBanco().Result;
 
             if (resultado != null)
