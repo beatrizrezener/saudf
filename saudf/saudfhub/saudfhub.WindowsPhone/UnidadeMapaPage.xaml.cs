@@ -1,6 +1,7 @@
 ﻿using saudfhub.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
@@ -158,8 +160,7 @@ namespace saudfhub
             }
             catch (Exception)
             {
-                // Handle errors like unauthorized access to location
-                // services or no Internet access.
+                Debug.WriteLine("Erro ao pegar localizacao do usuario");
             }
 
             // Start
@@ -168,10 +169,16 @@ namespace saudfhub
             startLocation.Longitude = currentPosition.Coordinate.Point.Position.Longitude;
             Geopoint startPoint = new Geopoint(startLocation);
 
+            //Image iconStart = new Image();
+            //iconStart.Source = new BitmapImage(new Uri("ms-appx:///Assets/PinkPushPin.png"));
+            //myMapControl.Children.Add(iconStart);
+            //MapControl.SetLocation(iconStart, startPoint);
+            //MapControl.SetNormalizedAnchorPoint(iconStart, new Point(0.5, 0.5));
+
             // End
             BasicGeoposition endLocation = new BasicGeoposition();
-            endLocation.Latitude = -15.890103578567;
-            endLocation.Longitude = -48.142154216765;
+            endLocation.Latitude = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
+            endLocation.Longitude = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
 
             Geopoint endPoint = new Geopoint(endLocation);
 
