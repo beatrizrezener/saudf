@@ -19,7 +19,7 @@ namespace saudfhub
             bool isDatabaseExisting = false;
             try
             {
-                StorageFile storageFile = await ApplicationData.Current.LocalFolder.GetFileAsync(nomeBanco);
+                StorageFile storageFile = await ApplicationData.Current.LocalFolder.GetFileAsync(nomeBanco).AsTask().ConfigureAwait(false);
                 isDatabaseExisting = true;
             }
             catch
@@ -30,19 +30,18 @@ namespace saudfhub
             return isDatabaseExisting;
         }
 
-        private static async Task<string> FazCopiaDoBanco()
+        private static async Task<bool> FazCopiaDoBancoBemSucedida()
         {
             try
             {
                 StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(@"ms-appx:///DataModel/saudf.sqlite")).AsTask().ConfigureAwait(false);
                 StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
                 await file.CopyAsync(folder).AsTask().ConfigureAwait(false);
-                string caminho = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "saudf.sqlite");
-                return caminho;
+                return true;
             }
             catch(Exception) 
             {
-                return null;
+                return false;
             }
         }
 
@@ -55,9 +54,7 @@ namespace saudfhub
                 return sConn;
             }
 
-            string resultado = FazCopiaDoBanco().Result;
-
-            if (resultado != null)
+            if (FazCopiaDoBancoBemSucedida().Result)
             {
                 SQLiteConnection sConn = new SQLiteConnection(caminhoBanco);
                 return sConn;
