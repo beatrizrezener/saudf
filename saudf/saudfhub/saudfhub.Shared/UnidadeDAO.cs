@@ -30,9 +30,10 @@ namespace saudfhub
         //    return Conexao.Conn().Table<Unidade>().Where(filtro).ToList();
         //}
 
-        //public Unidade Buscar(int id)
-        //{
-        //    return Listar(x => x.IdUnidade == id).FirstOrDefault();
-        //}
+        public Unidade Buscar(int id)
+        {
+            //return Listar(x => x.IdUnidade == id).FirstOrDefault();
+            return Conexao.Conn().Table<Unidade>().Where(x => x.IdUnidade == id).FirstOrDefault();
+        }
     }
 }

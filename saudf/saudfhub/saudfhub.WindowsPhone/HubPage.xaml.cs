@@ -134,8 +134,8 @@ namespace saudfhub
         /// <param name="e">Defaults about the click event.</param>
         private void ItemView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var itemId = ((SampleDataItem)e.ClickedItem).UniqueId;
-            if (!Frame.Navigate(typeof(ItemPage), itemId))
+            var itemId = ((Unidade)e.ClickedItem).IdUnidade;
+            if (!Frame.Navigate(typeof(UnidadePage), itemId))
             {
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
