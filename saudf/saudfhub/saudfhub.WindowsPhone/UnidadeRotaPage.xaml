@@ -9,8 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Icon="Directions" Label="Traçar Rota" Click="Click_TracarRota"/>
-            <AppBarButton Icon="AllApps" Label="Listar Rota" Click="Click_ListarRota"/>
+            <AppBarButton Icon="Back" Label="Voltar" Click="Click_Voltar"/>
         </CommandBar>
     </Page.BottomAppBar>
 

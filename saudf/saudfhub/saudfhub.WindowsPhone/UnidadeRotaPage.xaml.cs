@@ -112,7 +112,7 @@ namespace saudfhub
 
         }
 
-        private void Click_TracarRota(object sender, RoutedEventArgs e)
+        private void Click_Voltar(object sender, RoutedEventArgs e)
         {
             this.Frame.GoBack();
         }
