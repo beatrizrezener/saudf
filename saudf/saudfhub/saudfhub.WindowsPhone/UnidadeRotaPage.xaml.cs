@@ -44,9 +44,10 @@ namespace saudfhub
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            List<Geopoint> points = e.Parameter as List<Geopoint>;
-            startPoint = points[0];
-            endPoint = points[1];
+            List<Object> parameters = e.Parameter as List<Object>;
+            TextBlockNome.Text = parameters[0] as String;
+            startPoint = parameters[1] as Geopoint;
+            endPoint = parameters[2] as Geopoint;
             ListarRota();
         }
 
@@ -108,6 +109,16 @@ namespace saudfhub
                 tbTurnByTurn.Text =
                 "Um problema ocorreu: " + routeResult.Status.ToString();
             }
+
+        }
+
+        private void Click_TracarRota(object sender, RoutedEventArgs e)
+        {
+            this.Frame.GoBack();
+        }
+
+        private void Click_ListarRota(object sender, RoutedEventArgs e)
+        {
 
         }
     }

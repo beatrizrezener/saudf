@@ -213,38 +213,13 @@ namespace saudfhub
 
         private void ListarRota()
         {
-            List<Geopoint> ListParameters = new List<Geopoint>()
+            List<Object> ListParameters = new List<Object>()
             {
+                 unidade.Nome,
                  startPoint,
                  endPoint,
             };
             Frame.Navigate(typeof(UnidadeRotaPage),ListParameters);
-
-            //// Get the route between the points.
-            //MapRouteFinderResult routeResult =
-            //await MapRouteFinder.GetDrivingRouteAsync(
-            //  startPoint,
-            //  endPoint,
-            //  MapRouteOptimization.Time,
-            //  MapRouteRestrictions.None,
-            //  290);
-
-            //if (routeResult.Status == MapRouteFinderStatus.Success)
-            //{
-            //    // Use the route to initialize a MapRouteView.
-            //    MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
-            //    viewOfRoute.RouteColor = Colors.Blue;
-            //    viewOfRoute.OutlineColor = Colors.Blue;
-            //    // Add the new MapRouteView to the Routes collection
-            //    // of the MapControl.
-            //    myMapControl.Routes.Add(viewOfRoute);
-            //    // Fit the MapControl to the route.
-            //    await myMapControl.TrySetViewBoundsAsync(
-            //      routeResult.Route.BoundingBox,
-            //      null,
-            //      Windows.UI.Xaml.Controls.Maps.MapAnimationKind.Bow);
-            //}
-
         }
 
         private void Click_ListarRota(object sender, RoutedEventArgs e)
