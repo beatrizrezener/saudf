@@ -189,6 +189,8 @@ namespace saudfhub
                     null,
                     Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
             }
+            myMapControl.Center = startPoint;
+            myMapControl.ZoomLevel = 15;
         }
 
         private async Task setCurrentPosition()
