@@ -39,6 +39,7 @@ namespace saudfhub
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
         private Geoposition geoposition;
+        private List<Unidade> listaDeUnidadesFiltradas = null;
 
         public HubPage()
         {//Desenvolvido como projeto de conclusao do concurso S2B 1º/2015 - MIC Brasilia/DF
@@ -63,9 +64,25 @@ namespace saudfhub
             MapControl myMapControl = BuscarControleFilho<MapControl>(HubSaudf, "myMapControl") as MapControl;
             myMapControl.Center = pointBSB;
             myMapControl.ZoomLevel = 10;
-    
+
             var listView = (ListView)sender;
-            listView.ItemsSource = new UnidadeDAO().Listar();
+
+            CarregarListView(listView);
+        }
+
+        private void CarregarListView(ListView listView)
+        {
+            TextBox filtro = BuscarControleFilho<TextBox>(HubSaudf, "TextBoxFiltro") as TextBox;
+            string chave = filtro.Text.ToUpper();
+
+            if (string.IsNullOrEmpty(chave))
+            {
+                listView.ItemsSource = new UnidadeDAO().Listar();
+            }
+            else
+            {
+                listView.ItemsSource = new UnidadeDAO().Listar(chave);
+            }
         }
         /// <summary>
         /// Gets the <see cref="NavigationHelper"/> associated with this <see cref="Page"/>.
@@ -110,6 +127,12 @@ namespace saudfhub
             {
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
+        }
+
+        private void Click_FiltraUnidades(object sender, RoutedEventArgs e)
+        {
+            ListView lstView = BuscarControleFilho<ListView>(HubSaudf, "ListViewUnidadeSaude") as ListView;
+            CarregarListView(lstView);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -232,7 +255,7 @@ namespace saudfhub
             myMapControl.ZoomLevel = 15;
 
         }
-
+        
         private DependencyObject BuscarControleFilho<T>(DependencyObject controle, string controleFilho)
         {
             int childNumber = VisualTreeHelper.GetChildrenCount(controle);
@@ -276,6 +299,11 @@ namespace saudfhub
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.navigationHelper.OnNavigatedTo(e);
+
+            //if (e.Parameter as List<Unidade> != null)
+            //{
+            //    listaDeUnidadesFiltradas = e.Parameter as List<Unidade>;
+            //}
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -284,5 +312,6 @@ namespace saudfhub
         }
 
         #endregion
+
     }
 }

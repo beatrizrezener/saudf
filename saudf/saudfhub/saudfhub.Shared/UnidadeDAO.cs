@@ -14,15 +14,15 @@ namespace saudfhub
             return Conexao.Conn().Table<Unidade>().ToList();
         }
 
-        public static List<Unidade> Listar(string nome)
+        public List<Unidade> Listar(string chave)
         {
-            return Conexao.Conn().Table<Unidade>().Where(x => x.Nome.Contains(nome)).ToList();
+            return Conexao.Conn().Table<Unidade>().Where(x => x.Nome.Contains(chave) || x.Endereco.Contains(chave) || x.Bairro.Contains(chave) ).ToList();
         }
 
-        public List<Unidade> Listar(string porNome, string eBairro)
-        {
-            return Conexao.Conn().Table<Unidade>().Where(x => x.Nome.Contains(porNome) && x.Bairro.Contains(eBairro)).ToList();
-        }
+        //public List<Unidade> Listar(string porNome, string eBairro)
+        //{
+        //    return Conexao.Conn().Table<Unidade>().Where(x => x.Nome.Contains(porNome) && x.Bairro.Contains(eBairro)).ToList();
+        //}
 
         //public List<Unidade> Listar(Expression<Func<Unidade, bool>> filtro)
         //{
