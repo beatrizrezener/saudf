@@ -194,25 +194,7 @@ namespace saudfhub
 
         private void showUnidadeMaisProxima()
         {
-            List<Unidade> unidadesProximas = new List<Unidade>();
-            Unidade u1 = new Unidade();
-            u1.Nome = "Hospital Santa Marta";
-            u1.Endereco = "Taguatinga";
-            u1.Latitude = "-15.859855";
-            u1.Longitude = "-48.042606";
-            unidadesProximas.Add(u1);
-            Unidade u2 = new Unidade();
-            u2.Nome = "Hospital Santa Helena";
-            u2.Endereco = "Asa Norte";
-            u2.Latitude = "-15.735693";
-            u2.Longitude = "-47.897239";
-            unidadesProximas.Add(u2);
-            Unidade u3 = new Unidade();
-            u3.Nome = "Hospital Anchieta";
-            u3.Endereco = "Taguatinga";
-            u3.Latitude = "-15.823967";
-            u3.Longitude = "-48.066628";
-            unidadesProximas.Add(u3);
+            List<Unidade> unidadesProximas = new UnidadeDAO().Listar();
                 
             var fromLatFloat = double.Parse(geoposition.Coordinate.Point.Position.Latitude.ToString("0.0000000"), CultureInfo.InvariantCulture); 
             var fromLonFloat = double.Parse(geoposition.Coordinate.Point.Position.Longitude.ToString("0.0000000"), CultureInfo.InvariantCulture);
@@ -220,7 +202,7 @@ namespace saudfhub
             var usMaisProxima = new Unidade();
             double menor = 20000;
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < unidadesProximas.Count; i++)
             {
                 var usCorrente = unidadesProximas[i];
 
