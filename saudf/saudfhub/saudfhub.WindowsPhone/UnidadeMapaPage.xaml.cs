@@ -37,6 +37,8 @@ namespace saudfhub
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private Unidade unidade = new Unidade();
         public Geoposition currentPosition { get; set; }
+        private Geopoint startPoint;
+        private Geopoint endPoint;
 
         public UnidadeMapaPage()
         {
@@ -147,7 +149,7 @@ namespace saudfhub
         {
             ShowRotaNoMapa();
         }
-
+        
         private async void ShowRotaNoMapa()
         {
             Geolocator geolocator = new Geolocator();
@@ -167,7 +169,7 @@ namespace saudfhub
             BasicGeoposition startLocation = new BasicGeoposition();
             startLocation.Latitude = currentPosition.Coordinate.Point.Position.Latitude;
             startLocation.Longitude = currentPosition.Coordinate.Point.Position.Longitude;
-            Geopoint startPoint = new Geopoint(startLocation);
+            startPoint = new Geopoint(startLocation);
 
             //Image iconStart = new Image();
             //iconStart.Source = new BitmapImage(new Uri("ms-appx:///Assets/PinkPushPin.png"));
@@ -180,7 +182,7 @@ namespace saudfhub
             endLocation.Latitude = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
             endLocation.Longitude = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
 
-            Geopoint endPoint = new Geopoint(endLocation);
+            endPoint = new Geopoint(endLocation);
 
             // Get the route between the points.
             MapRouteFinderResult routeResult =
@@ -207,6 +209,22 @@ namespace saudfhub
                     null,
                     Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
             }
+        }
+
+        private void ListarRota()
+        {
+            List<Object> ListParameters = new List<Object>()
+            {
+                 unidade.Nome,
+                 startPoint,
+                 endPoint,
+            };
+            Frame.Navigate(typeof(UnidadeRotaPage),ListParameters);
+        }
+
+        private void Click_ListarRota(object sender, RoutedEventArgs e)
+        {
+            ListarRota();
         }
     }
 }

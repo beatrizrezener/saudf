@@ -10,7 +10,8 @@
     
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Icon="Phone" Label="Ligar" Click="Click_LigarUnidade"/>
+            <AppBarButton Icon="Phone" Label="Ligar para unidade" Click="Click_LigarUnidade"/>
+            <AppBarButton Icon="Map" Label="Ver no mapa" Click="Click_VerNoMapa"/>
         </CommandBar>
     </Page.BottomAppBar>
 
@@ -36,29 +37,20 @@
             <TextBlock x:Name="TextBlockNome" Text="Nome da Unidade" TextWrapping="Wrap" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
-        <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                    <TextBlock Text="Informações"  TextAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap" FontSize="20" Width="362"/>
+                <StackPanel Margin="0,0,0,0">
+                    <TextBlock Text="telefone" FontSize="35" FontWeight="Light"/>
+                    <TextBlock x:Name="TextBlockTelefone" Text="(99) 9999-9999" FontSize="20" FontWeight="Medium"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-                    <TextBlock Text="Tipo de Unidade:" FontSize="24"/>
-                    <TextBlock x:Name="TextBlockTipo" Text="Hospital" FontWeight="SemiBold" FontSize="24" Margin="10,0,0,0" Width="170"/>
+                <StackPanel Margin="0,20,0,0">
+                    <TextBlock Text="endereco" FontSize="35" FontWeight="Light"/>
+                    <TextBlock x:Name="TextBlockEndereco" Text="Quadra 999 Bairro XYZ Lote 99" TextWrapping="Wrap" FontSize="20" FontWeight="Medium"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
-                    <TextBlock Text="Telefone:" FontSize="24"/>
-                    <TextBlock x:Name="TextBlockTelefone" Text="(99) 9999-9999"  Margin="10,0,0,0" FontSize="24" Width="164"/>
+                <StackPanel Margin="0,20,0,0">
+                    <TextBlock Text="categoria" FontSize="35" FontWeight="Light"/>
+                    <TextBlock x:Name="TextBlockTipo" Text="Hospital" TextWrapping="Wrap" FontSize="20" FontWeight="Medium"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
-                    <TextBlock Text="Endereço:" FontSize="24"/>
-                    <TextBlock x:Name="TextBlockEndereco" Text="Quadra 999 Bairro XYZ Lote 99" TextWrapping="Wrap"  Margin="10,0,0,0" FontSize="24" Width="262"/>
-                </StackPanel>
-                <Button Content=""  HorizontalAlignment="Stretch" Margin="126,40,126.667,0" BorderThickness="0" Height="33" Click="Click_VerNoMapa">
-                    <Button.Background>
-                        <ImageBrush Stretch="Fill" ImageSource="Assets/ver_no_mapa.png"/>
-                    </Button.Background>
-                </Button>
             </StackPanel>
         </Grid>
     </Grid>
