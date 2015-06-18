@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -70,8 +71,7 @@ namespace saudfhub
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            unidade = new UnidadeDAO().Buscar((int)e.NavigationParameter);
-            //this.DefaultViewModel["Item"] = item;
+            unidade = e.NavigationParameter as Unidade;
             TextBlockNome.Text = (unidade as Unidade).Nome;
             TextBlockTelefone.Text = (unidade as Unidade).Telefone;
             TextBlockEndereco.Text = (unidade as Unidade).Bairro + " " + (unidade as Unidade).Endereco;
@@ -125,9 +125,29 @@ namespace saudfhub
             }
         }
 
-        private void Click_LigarUnidade(object sender, RoutedEventArgs e)
+        private async void Click_LigarUnidade(object sender, RoutedEventArgs e)
         {
-            Windows.ApplicationModel.Calls.PhoneCallManager.ShowPhoneCallUI("99999999", "UNIDADE GAMA");
+            string numero = unidade.Telefone;
+
+            if (numero == "Nao disponivel")
+            {
+                string titulo = "Desculpe!";
+                string mensagem = "Aparentemente não existe nenhum\ntelefone para esta unidade.";
+#if WINDOWS_PHONE_APP
+                ContentDialog popup = new ContentDialog();
+                popup.Title = titulo;
+                popup.Content = mensagem;
+                popup.PrimaryButtonText = "Ok";
+#else
+            var popup = new MessageDialog(titulo, mensagem);
+#endif
+                await popup.ShowAsync().AsTask().ConfigureAwait(false);
+            }
+            else
+            {
+                string numeroTelefone = Regex.Replace(numero, @"\D|(61)", "");
+                Windows.ApplicationModel.Calls.PhoneCallManager.ShowPhoneCallUI(numeroTelefone, unidade.Nome);
+            }
         }
     }
 }
