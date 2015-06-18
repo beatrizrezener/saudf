@@ -1,17 +1,16 @@
 ﻿<Page
+    x:Class="saudfhub.UnidadeRotaPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:saudfhub"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
-    x:Class="saudfhub.UnidadeMapaPage"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Icon="Directions" Label="Traçar Rota" Click="Click_TracarRota"/>
-            <AppBarButton Icon="AllApps" Label="Listar Rota" Click="Click_ListarRota"/>
+            <AppBarButton Icon="Directions" Label="Traçar Rota" />
+            <AppBarButton Icon="AllApps" Label="Listar Rota" />
         </CommandBar>
     </Page.BottomAppBar>
 
@@ -34,14 +33,16 @@
                 <Image Source="/Assets/hearthwhite.png" Width="40" />
                 <TextBlock x:Uid="Header" Text="SaúDF" Style="{ThemeResource TitleTextBlockStyle}" Margin="5,12,0,10" />
             </StackPanel>
-            <TextBlock x:Name="TextBlockNome" FontSize="30" Text="Nome da Unidade" TextWrapping="Wrap" Margin="0,10,0,10" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+            <TextBlock x:Name="TextBlockNome" FontSize="35" Text="Nome da Unidade" TextWrapping="Wrap" Margin="0,10,0,10" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-
-            <Maps:MapControl x:Name="myMapControl" MapServiceToken="9sS3k8A_lN-OP2NWhVxW5g" HorizontalAlignment="Left" VerticalAlignment="Top" Height="469" Width="362"/>
-
+            <ScrollViewer>
+                <StackPanel>
+                    <TextBlock TextWrapping="Wrap" FontSize="20" x:Name="tbTurnByTurn" />
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Page>

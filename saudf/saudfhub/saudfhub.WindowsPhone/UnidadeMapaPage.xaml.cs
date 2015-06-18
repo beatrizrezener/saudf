@@ -37,6 +37,8 @@ namespace saudfhub
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private Unidade unidade = new Unidade();
         public Geoposition currentPosition { get; set; }
+        private Geopoint startPoint;
+        private Geopoint endPoint;
 
         public UnidadeMapaPage()
         {
@@ -147,7 +149,7 @@ namespace saudfhub
         {
             ShowRotaNoMapa();
         }
-
+        
         private async void ShowRotaNoMapa()
         {
             Geolocator geolocator = new Geolocator();
@@ -167,7 +169,7 @@ namespace saudfhub
             BasicGeoposition startLocation = new BasicGeoposition();
             startLocation.Latitude = currentPosition.Coordinate.Point.Position.Latitude;
             startLocation.Longitude = currentPosition.Coordinate.Point.Position.Longitude;
-            Geopoint startPoint = new Geopoint(startLocation);
+            startPoint = new Geopoint(startLocation);
 
             //Image iconStart = new Image();
             //iconStart.Source = new BitmapImage(new Uri("ms-appx:///Assets/PinkPushPin.png"));
@@ -180,7 +182,7 @@ namespace saudfhub
             endLocation.Latitude = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
             endLocation.Longitude = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
 
-            Geopoint endPoint = new Geopoint(endLocation);
+            endPoint = new Geopoint(endLocation);
 
             // Get the route between the points.
             MapRouteFinderResult routeResult =
@@ -207,6 +209,47 @@ namespace saudfhub
                     null,
                     Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
             }
+        }
+
+        private void ListarRota()
+        {
+            List<Geopoint> ListParameters = new List<Geopoint>()
+            {
+                 startPoint,
+                 endPoint,
+            };
+            Frame.Navigate(typeof(UnidadeRotaPage),ListParameters);
+
+            //// Get the route between the points.
+            //MapRouteFinderResult routeResult =
+            //await MapRouteFinder.GetDrivingRouteAsync(
+            //  startPoint,
+            //  endPoint,
+            //  MapRouteOptimization.Time,
+            //  MapRouteRestrictions.None,
+            //  290);
+
+            //if (routeResult.Status == MapRouteFinderStatus.Success)
+            //{
+            //    // Use the route to initialize a MapRouteView.
+            //    MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
+            //    viewOfRoute.RouteColor = Colors.Blue;
+            //    viewOfRoute.OutlineColor = Colors.Blue;
+            //    // Add the new MapRouteView to the Routes collection
+            //    // of the MapControl.
+            //    myMapControl.Routes.Add(viewOfRoute);
+            //    // Fit the MapControl to the route.
+            //    await myMapControl.TrySetViewBoundsAsync(
+            //      routeResult.Route.BoundingBox,
+            //      null,
+            //      Windows.UI.Xaml.Controls.Maps.MapAnimationKind.Bow);
+            //}
+
+        }
+
+        private void Click_ListarRota(object sender, RoutedEventArgs e)
+        {
+            ListarRota();
         }
     }
 }
