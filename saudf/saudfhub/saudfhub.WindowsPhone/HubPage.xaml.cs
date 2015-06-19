@@ -281,23 +281,24 @@ namespace saudfhub
 
         private void USMaisProxima_Click(object sender, RoutedEventArgs e)
         {
-            DefineVisibilidadeDoAnelDeProgresso(visivel: true);
+            DefineVisibilidadeDoAnelDeProgresso(visivel: true, eOpacidadeDe: 0.2f);
             UnidadeMaisProxima();
         }
         private async void UnidadeMaisProxima()
         {
             await getMyPosition();
-            DefineVisibilidadeDoAnelDeProgresso(visivel: false);
+            DefineVisibilidadeDoAnelDeProgresso(visivel: false, eOpacidadeDe: 1.0f);
             if (podeProsseguir)
             {
                 Frame.Navigate(typeof(UnidadePage), usMaisProxima.IdUnidade);                
             }
         }
-
-        private void DefineVisibilidadeDoAnelDeProgresso(bool visivel)
+        
+        private void DefineVisibilidadeDoAnelDeProgresso(bool visivel, float eOpacidadeDe)
         {
             ProgressRing meuAneldeProgresso = BuscarControleFilho<ProgressRing>(HubSaudf, "ProgressRingPesquisaUSMaisProxima") as ProgressRing;
-
+            Image imagemDeFundo = BuscarControleFilho<Image>(HubSaudf, "ImageMapa") as Image;
+            imagemDeFundo.Opacity = eOpacidadeDe;
             HubSaudf.IsEnabled = !visivel;
             meuAneldeProgresso.IsActive = visivel;
         }
