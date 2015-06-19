@@ -145,7 +145,7 @@ namespace saudfhub
             }
             else
             {
-                string numeroTelefone = Regex.Replace(numero, @"\D|(61)", "");
+                string numeroTelefone = numero.Remove(0, 5);
                 Windows.ApplicationModel.Calls.PhoneCallManager.ShowPhoneCallUI(numeroTelefone, unidade.Nome);
             }
         }
