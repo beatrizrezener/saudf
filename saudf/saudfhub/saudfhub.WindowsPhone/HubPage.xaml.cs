@@ -41,6 +41,7 @@ namespace saudfhub
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
         private Geoposition geoposition;
         private Unidade usMaisProxima = new Unidade();
+        private bool podeProsseguir = false;
 
         public HubPage()
         {
@@ -153,14 +154,14 @@ namespace saudfhub
                 geoposition = await geolocator.GetGeopositionAsync(
                     maximumAge: TimeSpan.FromMinutes(5),
                     timeout: TimeSpan.FromSeconds(10));
+                podeProsseguir = true;
+                getUnidadeMaisProxima();
             }
             catch (Exception)
             {
-                // Handle errors like unauthorized access to location
-                // services or no Internet access.
+                podeProsseguir = false;
+                //show popup 
             }
-
-            getUnidadeMaisProxima();
         }
 
         private Double rad2deg(Double rad)
@@ -279,7 +280,10 @@ namespace saudfhub
         {
             await getMyPosition();
             DefineVisibilidadeDoAnelDeProgresso(visivel: false);
-            Frame.Navigate(typeof(UnidadePage), usMaisProxima.IdUnidade);
+            if (podeProsseguir)
+            {
+                Frame.Navigate(typeof(UnidadePage), usMaisProxima.IdUnidade);                
+            }
         }
 
         private void DefineVisibilidadeDoAnelDeProgresso(bool visivel)
