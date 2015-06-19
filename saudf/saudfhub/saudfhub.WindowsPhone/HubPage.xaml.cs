@@ -70,6 +70,23 @@ namespace saudfhub
             CarregarListView(listView);
         }
 
+        public void TelefonesEmergencia_Loaded(object sender, RoutedEventArgs e)
+        {
+            var listView = (ListView)sender;
+
+            List<TelefoneEmergencia> numerosTelefoneEmergencia = new List<TelefoneEmergencia>();
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Delegacia da Mulher", Numero: "180", CaminhoFoto: "Assets/DarkGray.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Disque Denúncia", Numero: "181", CaminhoFoto: "Assets/DarkGray.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia", Numero: "190", CaminhoFoto: "Assets/DarkGray.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "SAMU", Numero: "192", CaminhoFoto: "Assets/DarkGray.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Bombeiros", Numero: "193", CaminhoFoto: "Assets/DarkGray.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Federal", Numero: "194", CaminhoFoto: "Assets/DarkGray.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Civil", Numero: "197", CaminhoFoto: "Assets/DarkGray.png"));
+            
+            listView.ItemsSource = numerosTelefoneEmergencia;
+
+        }
+
         private void CarregarListView(ListView listView)
         {
             TextBox filtro = BuscarControleFilho<TextBox>(HubSaudf, "TextBoxFiltro") as TextBox;
@@ -128,6 +145,14 @@ namespace saudfhub
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
         }
+
+        private void ItemTelefone_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var telefoneSelecionado = ((TelefoneEmergencia)e.ClickedItem);
+
+            Windows.ApplicationModel.Calls.PhoneCallManager.ShowPhoneCallUI(telefoneSelecionado.Numero, telefoneSelecionado.Nome);
+        }
+
 
         private void Click_FiltraUnidades(object sender, RoutedEventArgs e)
         {

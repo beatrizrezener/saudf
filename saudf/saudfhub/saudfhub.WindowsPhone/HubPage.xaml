@@ -141,6 +141,30 @@
                     </Grid>
                 </DataTemplate>
             </HubSection>
+
+            <HubSection x:Uid="HubSectionTelefonesEmergencia" Header="Telefones de Emergência" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
+                <DataTemplate>
+                    <ListView
+                                Name="ListViewTelefonesEmergencia" 
+                                Loaded="TelefonesEmergencia_Loaded"
+                                SelectionMode="None"
+                                IsItemClickEnabled="True"
+                                ItemClick="ItemTelefone_ItemClick"
+                                ContinuumNavigationTransitionInfo.ExitElementContainer="True" Grid.ColumnSpan="3" Margin="0,9.167,-0.167,0" Grid.Row="2">
+                       <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,19">
+                                    <Image Source="{Binding CaminhoFoto}" Width="100" Height="70"/>
+                                    <StackPanel Margin="0,0,0,0">
+                                        <TextBlock Text="{Binding Nome}" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
+                                        <TextBlock Text="{Binding Numero}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DataTemplate>
+            </HubSection>
         </Hub>
     </Grid>
 </Page>

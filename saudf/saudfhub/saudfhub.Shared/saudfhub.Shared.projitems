@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DataModel\SampleDataSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SQLite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SQLiteAsync.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TelefoneEmergencia.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Unidade.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UnidadeDAO.cs" />
     <Content Include="$(MSBuildThisFileDirectory)DataModel\SampleData.json" />
