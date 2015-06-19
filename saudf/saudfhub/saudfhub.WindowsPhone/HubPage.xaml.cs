@@ -160,7 +160,15 @@ namespace saudfhub
             catch (Exception)
             {
                 podeProsseguir = false;
-                //show popup 
+            }
+
+            if (!podeProsseguir)
+            {
+                ContentDialog popup = new ContentDialog();
+                popup.Title = "Não foi possível obter\na sua localização.";
+                popup.Content = "Verifique sua conexão com a internet\ne tente novamente.";
+                popup.PrimaryButtonText = "Ok";
+                await popup.ShowAsync().AsTask().ConfigureAwait(false);
             }
         }
 
