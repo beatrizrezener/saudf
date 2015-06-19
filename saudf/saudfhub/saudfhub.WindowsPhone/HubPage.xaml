@@ -177,6 +177,23 @@
                     </ListView>
                 </DataTemplate>
             </HubSection>
+
+            <HubSection x:Uid="HubSectionInformacoesAdicionais" Header="Informações Adicionais" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
+                <DataTemplate>
+                    <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+                        <StackPanel>
+                            <StackPanel Margin="0,0,0,0">
+                                <TextBlock Text="sobre" FontSize="35" FontWeight="Light"/>
+                                <TextBlock Text="Este aplicativo foi desenvolvido como projeto de conclusão do curso S2B 1º/2015, oferecido pelo Microsoft Inovation Center - MIC, em parceria com o SENAI Taguatinga em Brasília/DF" TextWrapping="Wrap" FontSize="20" FontWeight="Medium"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,20,0,0">
+                                <TextBlock Text="contatos" FontSize="35" FontWeight="Light"/>
+                                <TextBlock Text="&#x2022; Beatriz Rezener Dourado Matos&#13;   &#x2023; beatrizrezener@gmail.com &#13;   &#x2023; (61) 8206-8271 &#13;&#x2022; João Gabriel de Britto e Silva&#13;   &#x2023; jgbs@outlook.com &#13;   &#x2023; (61) 8223-5587 &#13; " TextWrapping="Wrap" FontSize="20" FontWeight="Medium"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </HubSection>
         </Hub>
     </Grid>
 </Page>

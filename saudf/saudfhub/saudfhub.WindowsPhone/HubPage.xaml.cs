@@ -158,9 +158,12 @@ namespace saudfhub
 
         private void ItemTelefone_ItemClick(object sender, ItemClickEventArgs e)
         {
+#if WINDOWS_PHONE_APP
             var telefoneSelecionado = ((TelefoneEmergencia)e.ClickedItem);
-
             Windows.ApplicationModel.Calls.PhoneCallManager.ShowPhoneCallUI(telefoneSelecionado.Numero, telefoneSelecionado.Nome);
+#else
+            var popup = new MessageDialog("Desculpe!", "Essa funcionalidade só está disponível em celulares.");
+#endif
         }
 
         #region Mapa
