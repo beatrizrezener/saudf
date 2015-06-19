@@ -25,6 +25,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -42,7 +43,7 @@ namespace saudfhub
         private Unidade usMaisProxima = new Unidade();
 
         public HubPage()
-        {//Desenvolvido como projeto de conclusao do concurso S2B 1º/2015 - MIC Brasilia/DF
+        {
             this.InitializeComponent();
 
             // Hub is only supported in Portrait orientation
@@ -55,21 +56,7 @@ namespace saudfhub
 
         public void Unidades_Loaded(object sender, RoutedEventArgs e)
         {
-            BasicGeoposition queryHint = new BasicGeoposition();
-            queryHint.Latitude = -15.780148200000;
-            queryHint.Longitude = -47.92916980000001;
-
-            Geopoint pointBSB = new Geopoint(queryHint);
-
-            MapControl myMapControl = BuscarControleFilho<MapControl>(HubSaudf, "myMapControl") as MapControl;
-            myMapControl.Center = pointBSB;
-            myMapControl.ZoomLevel = 10;
-
-            MapService.ServiceToken = "9sS3k8A_lN-OP2NWhVxW5g";
-            ShowMyPosition();
-
             var listView = (ListView)sender;
-
             CarregarListView(listView);
         }
 
@@ -129,20 +116,6 @@ namespace saudfhub
         }
 
         /// <summary>
-        /// Shows the details of a clicked group in the <see cref="SectionPage"/>.
-        /// </summary>
-        /// <param name="sender">The source of the click event.</param>
-        /// <param name="e">Details about the click event.</param>
-        private void GroupSection_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var groupId = ((SampleDataGroup)e.ClickedItem).UniqueId;
-            if (!Frame.Navigate(typeof(SectionPage), groupId))
-            {
-                throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
-            }
-        }
-
-        /// <summary>
         /// Shows the details of an item clicked on in the <see cref="ItemPage"/>
         /// </summary>
         /// <param name="sender">The source of the click event.</param>
@@ -166,17 +139,9 @@ namespace saudfhub
 #endif
         }
 
-        #region Mapa
-        private void MaisInfo_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(UnidadePage), usMaisProxima);
-        }
-        private void Atualiza_Click(object sender, RoutedEventArgs e)
-        {
-            ShowMyPosition();
-        }
+        #region Geoposition
 
-        private async void ShowMyPosition()
+        private async Task getMyPosition()
         {
             Geolocator geolocator = new Geolocator();
             geolocator.DesiredAccuracyInMeters = 50;
@@ -195,7 +160,7 @@ namespace saudfhub
                 // services or no Internet access.
             }
 
-            showUnidadeMaisProxima();
+            getUnidadeMaisProxima();
         }
 
         private Double rad2deg(Double rad)
@@ -227,7 +192,7 @@ namespace saudfhub
             return Math.Round(kilometers, 2);
         }
 
-        private void showUnidadeMaisProxima()
+        private void getUnidadeMaisProxima()
         {
             List<Unidade> unidadesProximas = new UnidadeDAO().Listar();
 
@@ -250,27 +215,8 @@ namespace saudfhub
                     usMaisProxima = usCorrente;
                 }
             }
-
-            MapControl myMapControl = BuscarControleFilho<MapControl>(HubSaudf, "myMapControl") as MapControl;
-
-            MapIcon mapIcon = new MapIcon();
-            mapIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/PinkPushPin.png"));
-            mapIcon.NormalizedAnchorPoint = new Point(0.25, 0.9);
-
-            BasicGeoposition queryHint = new BasicGeoposition();
-            queryHint.Latitude = double.Parse(usMaisProxima.Latitude, CultureInfo.InvariantCulture);
-            queryHint.Longitude = double.Parse(usMaisProxima.Longitude, CultureInfo.InvariantCulture);
-
-            Geopoint toPoint = new Geopoint(queryHint);
-
-            mapIcon.Location = toPoint;
-            mapIcon.Title = usMaisProxima.Nome;
-            myMapControl.MapElements.Add(mapIcon);
-
-            myMapControl.Center = toPoint;
-            myMapControl.ZoomLevel = 15;
-
         }
+
         #endregion
         private DependencyObject BuscarControleFilho<T>(DependencyObject controle, string controleFilho)
         {
@@ -315,11 +261,6 @@ namespace saudfhub
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.navigationHelper.OnNavigatedTo(e);
-
-            //if (e.Parameter as List<Unidade> != null)
-            //{
-            //    listaDeUnidadesFiltradas = e.Parameter as List<Unidade>;
-            //}
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -328,6 +269,16 @@ namespace saudfhub
         }
 
         #endregion
+
+        private void USMaisProxima_Click(object sender, RoutedEventArgs e)
+        {
+            UnidadeMaisProxima();
+        }
+        private async void UnidadeMaisProxima()
+        {
+            await getMyPosition();
+            Frame.Navigate(typeof(UnidadePage), usMaisProxima);
+        }
 
     }
 }
