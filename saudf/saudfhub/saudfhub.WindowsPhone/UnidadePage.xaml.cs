@@ -127,20 +127,15 @@ namespace saudfhub
 
         private async void Click_LigarUnidade(object sender, RoutedEventArgs e)
         {
+#if WINDOWS_PHONE_APP
             string numero = unidade.Telefone;
 
             if (numero == "Nao disponivel")
             {
-                string titulo = "Desculpe!";
-                string mensagem = "Aparentemente não existe nenhum\ntelefone para esta unidade.";
-#if WINDOWS_PHONE_APP
                 ContentDialog popup = new ContentDialog();
-                popup.Title = titulo;
-                popup.Content = mensagem;
+                popup.Title = "Desculpe!";
+                popup.Content = "Aparentemente não existe nenhum\ntelefone para esta unidade.";
                 popup.PrimaryButtonText = "Ok";
-#else
-            var popup = new MessageDialog(titulo, mensagem);
-#endif
                 await popup.ShowAsync().AsTask().ConfigureAwait(false);
             }
             else
@@ -148,6 +143,9 @@ namespace saudfhub
                 string numeroTelefone = numero.Remove(0, 5);
                 Windows.ApplicationModel.Calls.PhoneCallManager.ShowPhoneCallUI(numeroTelefone, unidade.Nome);
             }
+#else
+            var popup = new MessageDialog("Desculpe!", "Essa funcionalidade só está disponível em celulares.");
+#endif
         }
 
         private async void Click_ReportarErro(object sender, RoutedEventArgs e)
