@@ -123,7 +123,7 @@ namespace saudfhub
         private void ItemView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var unidadeSelecionada = ((Unidade)e.ClickedItem);
-            if (!Frame.Navigate(typeof(UnidadePage), unidadeSelecionada))
+            if (!Frame.Navigate(typeof(UnidadePage), unidadeSelecionada.IdUnidade))
             {
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
@@ -277,7 +277,7 @@ namespace saudfhub
         private async void UnidadeMaisProxima()
         {
             await getMyPosition();
-            Frame.Navigate(typeof(UnidadePage), usMaisProxima);
+            Frame.Navigate(typeof(UnidadePage), usMaisProxima.IdUnidade);
         }
 
     }
