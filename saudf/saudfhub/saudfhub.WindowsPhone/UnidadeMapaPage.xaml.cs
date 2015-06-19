@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -136,6 +137,7 @@ namespace saudfhub
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.navigationHelper.OnNavigatedTo(e);
+            setEndPoint();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -152,37 +154,15 @@ namespace saudfhub
         
         private async void ShowRotaNoMapa()
         {
-            Geolocator geolocator = new Geolocator();
-            currentPosition = null;
-            try
-            {
-                currentPosition = await geolocator.GetGeopositionAsync(
-                    maximumAge: TimeSpan.FromMinutes(5),
-                    timeout: TimeSpan.FromSeconds(10));
-            }
-            catch (Exception)
-            {
-                Debug.WriteLine("Erro ao pegar localizacao do usuario");
-            }
 
             // Start
-            BasicGeoposition startLocation = new BasicGeoposition();
-            startLocation.Latitude = currentPosition.Coordinate.Point.Position.Latitude;
-            startLocation.Longitude = currentPosition.Coordinate.Point.Position.Longitude;
-            startPoint = new Geopoint(startLocation);
+            await setCurrentPosition();
 
             //Image iconStart = new Image();
             //iconStart.Source = new BitmapImage(new Uri("ms-appx:///Assets/PinkPushPin.png"));
             //myMapControl.Children.Add(iconStart);
             //MapControl.SetLocation(iconStart, startPoint);
             //MapControl.SetNormalizedAnchorPoint(iconStart, new Point(0.5, 0.5));
-
-            // End
-            BasicGeoposition endLocation = new BasicGeoposition();
-            endLocation.Latitude = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
-            endLocation.Longitude = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
-
-            endPoint = new Geopoint(endLocation);
 
             // Get the route between the points.
             MapRouteFinderResult routeResult =
@@ -209,10 +189,44 @@ namespace saudfhub
                     null,
                     Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
             }
+            myMapControl.Center = startPoint;
+            myMapControl.ZoomLevel = 15;
         }
 
-        private void ListarRota()
+        private async Task setCurrentPosition()
         {
+            if (startPoint == null)
+            {
+                Geolocator geolocator = new Geolocator();
+                currentPosition = null;
+                try
+                {
+                    currentPosition = await geolocator.GetGeopositionAsync(
+                        maximumAge: TimeSpan.FromMinutes(5),
+                        timeout: TimeSpan.FromSeconds(10));
+                }
+                catch (Exception)
+                {
+                    Debug.WriteLine("Erro ao pegar localizacao do usuario");
+                }
+
+                BasicGeoposition startLocation = new BasicGeoposition();
+                startLocation.Latitude = currentPosition.Coordinate.Point.Position.Latitude;
+                startLocation.Longitude = currentPosition.Coordinate.Point.Position.Longitude;
+                startPoint = new Geopoint(startLocation);
+            }
+        }
+
+        private void setEndPoint() {
+            BasicGeoposition endLocation = new BasicGeoposition();
+            endLocation.Latitude = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
+            endLocation.Longitude = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
+
+            endPoint= new Geopoint(endLocation);
+        }
+        private async void ListarRota()
+        {
+            await setCurrentPosition();
             List<Object> ListParameters = new List<Object>()
             {
                  unidade.Nome,
