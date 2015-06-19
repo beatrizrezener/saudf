@@ -116,10 +116,5 @@ namespace saudfhub
         {
             this.Frame.GoBack();
         }
-
-        private void Click_ListarRota(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
