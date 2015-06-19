@@ -78,13 +78,13 @@ namespace saudfhub
             var listView = (ListView)sender;
 
             List<TelefoneEmergencia> numerosTelefoneEmergencia = new List<TelefoneEmergencia>();
-            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Delegacia da Mulher", Numero: "180", CaminhoFoto: "Assets/DarkGray.png"));
-            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Disque Denúncia", Numero: "181", CaminhoFoto: "Assets/DarkGray.png"));
-            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia", Numero: "190", CaminhoFoto: "Assets/DarkGray.png"));
-            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "SAMU", Numero: "192", CaminhoFoto: "Assets/DarkGray.png"));
-            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Bombeiros", Numero: "193", CaminhoFoto: "Assets/DarkGray.png"));
-            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Federal", Numero: "194", CaminhoFoto: "Assets/DarkGray.png"));
-            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Civil", Numero: "197", CaminhoFoto: "Assets/DarkGray.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Atendimento à Mulher", Numero: "180", CaminhoFoto: "Assets/Emergencia/ligue_180.jpg"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Disque Denúncia", Numero: "181", CaminhoFoto: "Assets/Emergencia/disque-denuncia.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Militar", Numero: "190", CaminhoFoto: "Assets/Emergencia/policia_militar.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "SAMU", Numero: "192", CaminhoFoto: "Assets/Emergencia/Samu.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Bombeiros", Numero: "193", CaminhoFoto: "Assets/Emergencia/Bombeiros.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Federal", Numero: "194", CaminhoFoto: "Assets/Emergencia/Logo_Policia_Federal_DF.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Civil", Numero: "197", CaminhoFoto: "Assets/Emergencia/Logo_Policia_Civil_DF.png"));
 
             listView.ItemsSource = numerosTelefoneEmergencia;
 
@@ -158,9 +158,12 @@ namespace saudfhub
 
         private void ItemTelefone_ItemClick(object sender, ItemClickEventArgs e)
         {
+#if WINDOWS_PHONE_APP
             var telefoneSelecionado = ((TelefoneEmergencia)e.ClickedItem);
-
             Windows.ApplicationModel.Calls.PhoneCallManager.ShowPhoneCallUI(telefoneSelecionado.Numero, telefoneSelecionado.Nome);
+#else
+            var popup = new MessageDialog("Desculpe!", "Essa funcionalidade só está disponível em celulares.");
+#endif
         }
 
         #region Mapa
