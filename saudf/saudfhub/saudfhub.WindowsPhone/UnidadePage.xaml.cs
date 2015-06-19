@@ -149,5 +149,25 @@ namespace saudfhub
                 Windows.ApplicationModel.Calls.PhoneCallManager.ShowPhoneCallUI(numeroTelefone, unidade.Nome);
             }
         }
+
+        private async void Click_ReportarErro(object sender, RoutedEventArgs e)
+        {
+            Windows.ApplicationModel.Email.EmailRecipient sendToDev1 = new Windows.ApplicationModel.Email.EmailRecipient()
+            {
+                Address = "beatrizrezener@gmail.com"
+            };
+
+            Windows.ApplicationModel.Email.EmailRecipient sendToDev2 = new Windows.ApplicationModel.Email.EmailRecipient()
+            {
+                Address = "jgbs@outlook.com"
+            };
+
+            Windows.ApplicationModel.Email.EmailMessage mail = new Windows.ApplicationModel.Email.EmailMessage();
+            mail.Subject = "Reporte um erro ou dê uma sugestão";
+            mail.To.Add(sendToDev1);
+            mail.To.Add(sendToDev2);
+            
+            await Windows.ApplicationModel.Email.EmailManager.ShowComposeNewEmailAsync(mail);
+        }
     }
 }
