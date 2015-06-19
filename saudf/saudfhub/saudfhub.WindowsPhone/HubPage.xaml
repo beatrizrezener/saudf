@@ -94,11 +94,13 @@
 				HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
                     <Grid>
+                        <!--<Grid  x:Name="GridControleUI" Background="Black" Visibility="Visible" Opacity="50">-->
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Image HorizontalAlignment="Center" Stretch="UniformToFill" Grid.Row="1" Source="Assets/UnidadeProxima.jpg" />
                         <Button Content="" HorizontalAlignment="Left" Margin="75,118,0,0" VerticalAlignment="Top" Height="183" Width="192" Click="USMaisProxima_Click" BorderThickness="0" ClickMode="Hover"/>
+                        <ProgressRing x:Name="ProgressRingPesquisaUSMaisProxima" IsActive="False" Height="100" Width="100" />
                     </Grid>
                 </DataTemplate>
             </HubSection>
