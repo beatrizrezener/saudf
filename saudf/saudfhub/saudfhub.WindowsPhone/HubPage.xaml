@@ -72,7 +72,12 @@
     </Page.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <Hub x:Name="HubSaudf" x:Uid="HubSaudf" Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="88*"/>
+            <RowDefinition Height="203*"/>
+            <RowDefinition Height="29*"/>
+        </Grid.RowDefinitions>
+        <Hub x:Name="HubSaudf" x:Uid="HubSaudf" Background="Black" Grid.RowSpan="3">
             <Hub.Header>
                 <Grid Margin="0,20,0,0">
                     <Grid.ColumnDefinitions>
@@ -89,14 +94,21 @@
 				DataContext="{Binding Groups[2]}" HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
                     <Grid>
-                        <StackPanel>
-                            <TextBlock xml:space="preserve" FontSize="20">
-								<Run Text="Encontre a Unidade de Saúde mais &#xD;&#xA;próxima a você!                            "/>
-                            </TextBlock>
-                            <Button Content="Buscar" Click="Button_Click" HorizontalAlignment="Stretch" Margin="116,0,115.833,0"/>
-                            <Maps:MapControl x:Name="myMapControl" MapServiceToken="9sS3k8A_lN-OP2NWhVxW5g" HorizontalAlignment="Left" VerticalAlignment="Top" Height="350" Width="340">
-                            </Maps:MapControl>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="57*"/>
+                            <RowDefinition Height="397*" />
+                            <RowDefinition Height="56*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" xml:space="preserve" FontSize="20" Margin="0,0,0,182.167" Grid.RowSpan="2">
+						    <Run Text="Esta é a Unidade de Saúde mais &#xD;&#xA;próxima a você!                            "/>
+                        </TextBlock>
+                        <Maps:MapControl Grid.Row="1" x:Name="myMapControl" MapServiceToken="9sS3k8A_lN-OP2NWhVxW5g" HorizontalAlignment="Left" Width="340"  Margin="0,0.5,0,1.167" />
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                            <Button Content="Atualizar Mapa" Click="Atualiza_Click" HorizontalAlignment="Stretch" Margin="0,0,20,0"/>
+                            <Button Content="Mais Informações" Click="MaisInfo_Click" HorizontalAlignment="Stretch" Margin="0,0,0,0"/>
                         </StackPanel>
+
                     </Grid>
                 </DataTemplate>
             </HubSection>
@@ -151,7 +163,7 @@
                                 IsItemClickEnabled="True"
                                 ItemClick="ItemTelefone_ItemClick"
                                 ContinuumNavigationTransitionInfo.ExitElementContainer="True" Grid.ColumnSpan="3" Margin="0,9.167,-0.167,0" Grid.Row="2">
-                       <ListView.ItemTemplate>
+                        <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,19">
                                     <Image Source="{Binding CaminhoFoto}" Width="100" Height="70"/>

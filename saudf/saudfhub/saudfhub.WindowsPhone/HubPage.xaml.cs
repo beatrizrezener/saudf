@@ -39,7 +39,7 @@ namespace saudfhub
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
         private Geoposition geoposition;
-        private List<Unidade> listaDeUnidadesFiltradas = null;
+        private Unidade usMaisProxima = new Unidade();
 
         public HubPage()
         {//Desenvolvido como projeto de conclusao do concurso S2B 1º/2015 - MIC Brasilia/DF
@@ -65,6 +65,9 @@ namespace saudfhub
             myMapControl.Center = pointBSB;
             myMapControl.ZoomLevel = 10;
 
+            MapService.ServiceToken = "9sS3k8A_lN-OP2NWhVxW5g";
+            ShowMyPosition();
+
             var listView = (ListView)sender;
 
             CarregarListView(listView);
@@ -82,7 +85,7 @@ namespace saudfhub
             numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Bombeiros", Numero: "193", CaminhoFoto: "Assets/DarkGray.png"));
             numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Federal", Numero: "194", CaminhoFoto: "Assets/DarkGray.png"));
             numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Civil", Numero: "197", CaminhoFoto: "Assets/DarkGray.png"));
-            
+
             listView.ItemsSource = numerosTelefoneEmergencia;
 
         }
@@ -101,6 +104,13 @@ namespace saudfhub
                 listView.ItemsSource = new UnidadeDAO().Listar(chave);
             }
         }
+
+        private void Click_FiltraUnidades(object sender, RoutedEventArgs e)
+        {
+            ListView lstView = BuscarControleFilho<ListView>(HubSaudf, "ListViewUnidadeSaude") as ListView;
+            CarregarListView(lstView);
+        }
+
         /// <summary>
         /// Gets the <see cref="NavigationHelper"/> associated with this <see cref="Page"/>.
         /// </summary>
@@ -153,23 +163,20 @@ namespace saudfhub
             Windows.ApplicationModel.Calls.PhoneCallManager.ShowPhoneCallUI(telefoneSelecionado.Numero, telefoneSelecionado.Nome);
         }
 
-
-        private void Click_FiltraUnidades(object sender, RoutedEventArgs e)
+        #region Mapa
+        private void MaisInfo_Click(object sender, RoutedEventArgs e)
         {
-            ListView lstView = BuscarControleFilho<ListView>(HubSaudf, "ListViewUnidadeSaude") as ListView;
-            CarregarListView(lstView);
+            Frame.Navigate(typeof(UnidadePage), usMaisProxima);
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Atualiza_Click(object sender, RoutedEventArgs e)
         {
-            MapService.ServiceToken = "9sS3k8A_lN-OP2NWhVxW5g";
             ShowMyPosition();
         }
 
         private async void ShowMyPosition()
         {
             Geolocator geolocator = new Geolocator();
-            //geolocator.DesiredAccuracyInMeters = 50;
+            geolocator.DesiredAccuracyInMeters = 50;
 
             geoposition = null;
 
@@ -220,11 +227,10 @@ namespace saudfhub
         private void showUnidadeMaisProxima()
         {
             List<Unidade> unidadesProximas = new UnidadeDAO().Listar();
-                
-            var fromLatFloat = double.Parse(geoposition.Coordinate.Point.Position.Latitude.ToString("0.0000000"), CultureInfo.InvariantCulture); 
-            var fromLonFloat = double.Parse(geoposition.Coordinate.Point.Position.Longitude.ToString("0.0000000"), CultureInfo.InvariantCulture);
 
-            var usMaisProxima = new Unidade();
+            var fromLatFloat = geoposition.Coordinate.Point.Position.Latitude;
+            var fromLonFloat = geoposition.Coordinate.Point.Position.Longitude;
+
             double menor = 20000;
 
             for (int i = 0; i < unidadesProximas.Count; i++)
@@ -247,7 +253,7 @@ namespace saudfhub
             MapIcon mapIcon = new MapIcon();
             mapIcon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/PinkPushPin.png"));
             mapIcon.NormalizedAnchorPoint = new Point(0.25, 0.9);
-            
+
             BasicGeoposition queryHint = new BasicGeoposition();
             queryHint.Latitude = double.Parse(usMaisProxima.Latitude, CultureInfo.InvariantCulture);
             queryHint.Longitude = double.Parse(usMaisProxima.Longitude, CultureInfo.InvariantCulture);
@@ -262,7 +268,7 @@ namespace saudfhub
             myMapControl.ZoomLevel = 15;
 
         }
-        
+        #endregion
         private DependencyObject BuscarControleFilho<T>(DependencyObject controle, string controleFilho)
         {
             int childNumber = VisualTreeHelper.GetChildrenCount(controle);
