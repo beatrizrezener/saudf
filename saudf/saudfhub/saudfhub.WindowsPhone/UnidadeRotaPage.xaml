@@ -35,13 +35,14 @@
             <TextBlock x:Name="TextBlockNome" FontSize="35" Text="Nome da Unidade" TextWrapping="Wrap" Margin="0,10,0,10" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
-        <!--TODO: Content should be placed within the following grid-->
+        
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <ScrollViewer>
                 <StackPanel>
-                    <TextBlock TextWrapping="Wrap" FontSize="20" x:Name="tbTurnByTurn" />
+                    <TextBlock Text="Traçando rota, por favor aguarde." TextWrapping="Wrap" FontSize="20" x:Name="tbTurnByTurn" />
                 </StackPanel>
             </ScrollViewer>
+            <ProgressRing x:Name="ProgressRingDefineDirecoes" IsActive="False" Height="100" Width="100" />
         </Grid>
     </Grid>
 </Page>

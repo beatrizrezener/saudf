@@ -206,7 +206,9 @@ namespace saudfhub
         }
         private async void ListarRota()
         {
+            ProgressRingTracarRota.IsActive = true;
             await setCurrentPosition();
+            ProgressRingTracarRota.IsActive = false;
 
             if (routeResult != null)
             {
