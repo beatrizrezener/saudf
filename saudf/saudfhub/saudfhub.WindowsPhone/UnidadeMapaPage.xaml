@@ -36,11 +36,11 @@
             </StackPanel>
             <TextBlock x:Name="TextBlockNome" FontSize="30" Text="Nome da Unidade" TextWrapping="Wrap" Margin="0,10,0,10" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
-
-        <!--TODO: Content should be placed within the following grid-->
+        
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
 
             <Maps:MapControl x:Name="myMapControl" MapServiceToken="9sS3k8A_lN-OP2NWhVxW5g" HorizontalAlignment="Left" VerticalAlignment="Top" Height="469" Width="362"/>
+            <ProgressRing x:Name="ProgressRingTracarRota" IsActive="False" Height="100" Width="100" />
 
         </Grid>
     </Grid>

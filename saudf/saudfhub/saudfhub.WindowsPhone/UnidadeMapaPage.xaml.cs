@@ -116,6 +116,8 @@ namespace saudfhub
         private async void ShowRotaNoMapa()
         {
 
+            ProgressRingTracarRota.IsActive = true;
+            
             // Start
             await setCurrentPosition();
 
@@ -146,7 +148,7 @@ namespace saudfhub
                                     Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
                     myMapControl.Center = startPoint;
                     myMapControl.ZoomLevel = 15;
-                   
+                    
                 }
                 else
                 {
@@ -157,6 +159,8 @@ namespace saudfhub
             {
                 await CriaAlerta("Não foi possível obter\na sua localização.");
             }
+
+            ProgressRingTracarRota.IsActive = false;
         }
 
         private async Task CriaAlerta(string titulo)
