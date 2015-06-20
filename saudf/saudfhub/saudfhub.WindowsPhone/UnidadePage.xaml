@@ -45,7 +45,7 @@
                     <TextBlock x:Name="TextBlockTelefone" Text="(99) 9999-9999" FontSize="20" FontWeight="Medium"/>
                 </StackPanel>
                 <StackPanel Margin="0,20,0,0">
-                    <TextBlock Text="endereco" FontSize="35" FontWeight="Light"/>
+                    <TextBlock Text="endereço" FontSize="35" FontWeight="Light"/>
                     <TextBlock x:Name="TextBlockEndereco" Text="Quadra 999 Bairro XYZ Lote 99" TextWrapping="Wrap" FontSize="20" FontWeight="Medium"/>
                 </StackPanel>
                 <StackPanel Margin="0,20,0,0">

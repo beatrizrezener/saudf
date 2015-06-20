@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using saudfhub.Data;
 using saudfhub.Common;
+using Windows.UI.Popups;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -50,46 +51,19 @@ namespace saudfhub
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
         }
 
-        /// <summary>
-        /// Populates the page with content passed during navigation.  Any saved state is also
-        /// provided when recreating a page from a prior session.
-        /// </summary>
-        /// <param name="sender">
-        /// The source of the event; typically <see cref="NavigationHelper"/>
-        /// </param>
-        /// <param name="e">Event data that provides both the navigation parameter passed to
-        /// <see cref="Frame.Navigate(Type, object)"/> when this page was initially requested and
-        /// a dictionary of state preserved by this page during an earlier
-        /// session.  The state will be null the first time a page is visited.</param>
-        private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var sampleDataGroup = await SampleDataSource.GetGroupAsync("Group-4");
-            this.DefaultViewModel["Section3Items"] = sampleDataGroup;
+         
         }
 
-        /// <summary>
-        /// Invoked when a HubSection header is clicked.
-        /// </summary>
-        /// <param name="sender">The Hub that contains the HubSection whose header was clicked.</param>
-        /// <param name="e">Event data that describes how the click was initiated.</param>
-        void Hub_SectionHeaderClick(object sender, HubSectionHeaderClickEventArgs e)
+        public void Unidades_Loaded(object sender, RoutedEventArgs e)
         {
-            HubSection section = e.Section;
-            var group = section.DataContext;
-            this.Frame.Navigate(typeof(SectionPage), ((SampleDataGroup)group).UniqueId);
+            var listView = (ListView)sender;
+            CarregarListView(listView);
         }
 
-        /// <summary>
-        /// Invoked when an item within a section is clicked.
-        /// </summary>
-        /// <param name="sender">The GridView or ListView
-        /// displaying the item clicked.</param>
-        /// <param name="e">Event data that describes the item clicked.</param>
         void ItemView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // Navigate to the appropriate destination page, configuring the new page
-            // by passing required information as a navigation parameter
             var itemId = ((SampleDataItem)e.ClickedItem).UniqueId;
             this.Frame.Navigate(typeof(ItemPage), itemId);
         }
@@ -115,5 +89,78 @@ namespace saudfhub
         }
 
         #endregion
+
+        private void USMaisProxima_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void CarregarListView(ListView listView)
+        {
+            TextBox filtro = BuscarControleFilho<TextBox>(HubSaudf, "TextBoxFiltro") as TextBox;
+            string chave = filtro.Text.ToUpper();
+
+            if (string.IsNullOrEmpty(chave))
+            {
+                listView.ItemsSource = new UnidadeDAO().Listar();
+            }
+            else
+            {
+                listView.ItemsSource = new UnidadeDAO().Listar(chave);
+            }
+        }
+
+        private void Click_FiltraUnidades(object sender, RoutedEventArgs e)
+        {
+            ListView lstView = BuscarControleFilho<ListView>(HubSaudf, "ListViewUnidadeSaude") as ListView;
+            CarregarListView(lstView);
+        }
+
+        public void TelefonesEmergencia_Loaded(object sender, RoutedEventArgs e)
+        {
+            var listView = (ListView)sender;
+
+            List<TelefoneEmergencia> numerosTelefoneEmergencia = new List<TelefoneEmergencia>();
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Atendimento à Mulher", Numero: "180", CaminhoFoto: "Assets/Emergencia/ligue_180.jpg"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Disque Denúncia", Numero: "181", CaminhoFoto: "Assets/Emergencia/disque-denuncia.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Militar", Numero: "190", CaminhoFoto: "Assets/Emergencia/policia_militar.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "SAMU", Numero: "192", CaminhoFoto: "Assets/Emergencia/Samu.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Bombeiros", Numero: "193", CaminhoFoto: "Assets/Emergencia/Bombeiros.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Federal", Numero: "194", CaminhoFoto: "Assets/Emergencia/Logo_Policia_Federal_DF.png"));
+            numerosTelefoneEmergencia.Add(new TelefoneEmergencia(Nome: "Polícia Civil", Numero: "197", CaminhoFoto: "Assets/Emergencia/Logo_Policia_Civil_DF.png"));
+
+            listView.ItemsSource = numerosTelefoneEmergencia;
+
+        }
+        private async void ItemTelefone_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            MessageDialog popup = new MessageDialog("Essa funcionalidade só está disponível em celulares.","Desculpe!");
+            await popup.ShowAsync();
+        }
+
+        private DependencyObject BuscarControleFilho<T>(DependencyObject controle, string controleFilho)
+        {
+            int childNumber = VisualTreeHelper.GetChildrenCount(controle);
+            for (int i = 0; i < childNumber; i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(controle, i);
+                FrameworkElement fe = child as FrameworkElement;
+                // Not a framework element or is null
+                if (fe == null) return null;
+
+                if (child is T && fe.Name == controleFilho)
+                {
+                    // Found the control so return
+                    return child;
+                }
+                else
+                {
+                    // Not found it - search children
+                    DependencyObject nextLevel = BuscarControleFilho<T>(child, controleFilho);
+                    if (nextLevel != null)
+                        return nextLevel;
+                }
+            }
+            return null;
+        }
     }
 }

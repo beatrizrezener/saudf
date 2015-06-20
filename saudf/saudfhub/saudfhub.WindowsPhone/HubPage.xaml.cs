@@ -31,9 +31,6 @@ using System.Threading.Tasks;
 
 namespace saudfhub
 {
-    /// <summary>
-    /// A page that displays a grouped collection of items.
-    /// </summary>
     public sealed partial class HubPage : Page
     {
         private readonly NavigationHelper navigationHelper;
@@ -99,29 +96,17 @@ namespace saudfhub
             CarregarListView(lstView);
         }
 
-        /// <summary>
-        /// Gets the <see cref="NavigationHelper"/> associated with this <see cref="Page"/>.
-        /// </summary>
         public NavigationHelper NavigationHelper
         {
             get { return this.navigationHelper; }
         }
 
-        /// <summary>
-        /// Gets the view model for this <see cref="Page"/>.
-        /// This can be changed to a strongly typed view model.
-        /// </summary>
         public ObservableDictionary DefaultViewModel
         {
             get { return this.defaultViewModel; }
         }
 
-        /// <summary>
-        /// Shows the details of an item clicked on in the <see cref="ItemPage"/>
-        /// </summary>
-        /// <param name="sender">The source of the click event.</param>
-        /// <param name="e">Defaults about the click event.</param>
-        private void ItemView_ItemClick(object sender, ItemClickEventArgs e)
+       private void ItemView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var unidadeSelecionada = ((Unidade)e.ClickedItem);
             if (!Frame.Navigate(typeof(UnidadePage), unidadeSelecionada.IdUnidade))
@@ -132,12 +117,8 @@ namespace saudfhub
 
         private void ItemTelefone_ItemClick(object sender, ItemClickEventArgs e)
         {
-#if WINDOWS_PHONE_APP
             var telefoneSelecionado = ((TelefoneEmergencia)e.ClickedItem);
             Windows.ApplicationModel.Calls.PhoneCallManager.ShowPhoneCallUI(telefoneSelecionado.Numero, telefoneSelecionado.Nome);
-#else
-            var popup = new MessageDialog("Desculpe!", "Essa funcionalidade só está disponível em celulares.");
-#endif
         }
 
         #region Geoposition
@@ -255,18 +236,6 @@ namespace saudfhub
 
         #region NavigationHelper registration
 
-        /// <summary>
-        /// The methods provided in this section are simply used to allow
-        /// NavigationHelper to respond to the page's navigation methods.
-        /// <para>
-        /// Page specific logic should be placed in event handlers for the
-        /// <see cref="NavigationHelper.LoadState"/>
-        /// and <see cref="NavigationHelper.SaveState"/>.
-        /// The navigation parameter is available in the LoadState method
-        /// in addition to page state preserved during an earlier session.
-        /// </para>
-        /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.navigationHelper.OnNavigatedTo(e);

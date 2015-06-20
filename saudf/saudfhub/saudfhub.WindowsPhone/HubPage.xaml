@@ -26,7 +26,6 @@
                 <TextBlock Margin="0,10,0,-9.5" Text="{Binding}"/>
             </DataTemplate>
 
-            <!-- Grid-appropriate item template as seen in section 2 -->
             <DataTemplate x:Key="Standard200x180TileItemTemplate">
                 <Grid Margin="0,0,9.5,9.5" Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
                     <Image Source="{Binding ImagePath}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}" Height="138.5" Width="138.5"/>
@@ -94,7 +93,6 @@
 				HeaderTemplate="{ThemeResource HubSectionHeaderTemplate}">
                 <DataTemplate>
                     <Grid>
-                        <!--<Grid  x:Name="GridControleUI" Background="Black" Visibility="Visible" Opacity="50">-->
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
