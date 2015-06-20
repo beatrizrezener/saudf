@@ -29,9 +29,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace saudfhub
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class UnidadeMapaPage : Page
     {
         private NavigationHelper navigationHelper;
@@ -40,6 +38,8 @@ namespace saudfhub
         public Geoposition currentPosition { get; set; }
         private Geopoint startPoint;
         private Geopoint endPoint;
+        private bool podeProsseguir = false;
+        MapRouteFinderResult routeResult = null;
 
         public UnidadeMapaPage()
         {
@@ -50,34 +50,16 @@ namespace saudfhub
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
         }
 
-        /// <summary>
-        /// Gets the <see cref="NavigationHelper"/> associated with this <see cref="Page"/>.
-        /// </summary>
         public NavigationHelper NavigationHelper
         {
             get { return this.navigationHelper; }
         }
 
-        /// <summary>
-        /// Gets the view model for this <see cref="Page"/>.
-        /// This can be changed to a strongly typed view model.
-        /// </summary>
         public ObservableDictionary DefaultViewModel
         {
             get { return this.defaultViewModel; }
         }
 
-        /// <summary>
-        /// Populates the page with content passed during navigation.  Any saved state is also
-        /// provided when recreating a page from a prior session.
-        /// </summary>
-        /// <param name="sender">
-        /// The source of the event; typically <see cref="NavigationHelper"/>
-        /// </param>
-        /// <param name="e">Event data that provides both the navigation parameter passed to
-        /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
-        /// a dictionary of state preserved by this page during an earlier
-        /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             MapService.ServiceToken = "9sS3k8A_lN-OP2NWhVxW5g";
@@ -107,33 +89,12 @@ namespace saudfhub
 
         }
 
-        /// <summary>
-        /// Preserves state associated with this page in case the application is suspended or the
-        /// page is discarded from the navigation cache.  Values must conform to the serialization
-        /// requirements of <see cref="SuspensionManager.SessionState"/>.
-        /// </summary>
-        /// <param name="sender">The source of the event; typically <see cref="NavigationHelper"/></param>
-        /// <param name="e">Event data that provides an empty dictionary to be populated with
-        /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
         }
 
         #region NavigationHelper registration
 
-        /// <summary>
-        /// The methods provided in this section are simply used to allow
-        /// NavigationHelper to respond to the page's navigation methods.
-        /// <para>
-        /// Page specific logic should be placed in event handlers for the  
-        /// <see cref="NavigationHelper.LoadState"/>
-        /// and <see cref="NavigationHelper.SaveState"/>.
-        /// The navigation parameter is available in the LoadState method 
-        /// in addition to page state preserved during an earlier session.
-        /// </para>
-        /// </summary>
-        /// <param name="e">Provides data for navigation methods and event
-        /// handlers that cannot cancel the navigation request.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.navigationHelper.OnNavigatedTo(e);
@@ -158,39 +119,53 @@ namespace saudfhub
             // Start
             await setCurrentPosition();
 
-            //Image iconStart = new Image();
-            //iconStart.Source = new BitmapImage(new Uri("ms-appx:///Assets/PinkPushPin.png"));
-            //myMapControl.Children.Add(iconStart);
-            //MapControl.SetLocation(iconStart, startPoint);
-            //MapControl.SetNormalizedAnchorPoint(iconStart, new Point(0.5, 0.5));
-
-            // Get the route between the points.
-            MapRouteFinderResult routeResult =
-                await MapRouteFinder.GetDrivingRouteAsync(
-                startPoint,
-                endPoint,
-                MapRouteOptimization.Time,
-                MapRouteRestrictions.None);
-
-            if (routeResult.Status == MapRouteFinderStatus.Success)
+            if (podeProsseguir)
             {
-                // Use the route to initialize a MapRouteView.
-                MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
-                viewOfRoute.RouteColor = Colors.Yellow;
-                viewOfRoute.OutlineColor = Colors.Black;
+                routeResult =
+                    await MapRouteFinder.GetDrivingRouteAsync(
+                    startPoint,
+                    endPoint,
+                    MapRouteOptimization.Time,
+                    MapRouteRestrictions.None);
 
-                // Add the new MapRouteView to the Routes collection
-                // of the MapControl.
-                myMapControl.Routes.Add(viewOfRoute);
+                if (routeResult.Status == MapRouteFinderStatus.Success)
+                {
+                    // Use the route to initialize a MapRouteView.
+                    MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
+                    viewOfRoute.RouteColor = Colors.Yellow;
+                    viewOfRoute.OutlineColor = Colors.Black;
 
-                // Fit the MapControl to the route.
-                await myMapControl.TrySetViewBoundsAsync(
-                    routeResult.Route.BoundingBox,
-                    null,
-                    Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
+                    // Add the new MapRouteView to the Routes collection
+                    // of the MapControl.
+                    myMapControl.Routes.Add(viewOfRoute);
+
+                    // Fit the MapControl to the route.
+                    await myMapControl.TrySetViewBoundsAsync(
+                                    routeResult.Route.BoundingBox,
+                                    null,
+                                    Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
+                    myMapControl.Center = startPoint;
+                    myMapControl.ZoomLevel = 15;
+                   
+                }
+                else
+                {
+                    await CriaAlerta("Não foi possível traçar\na rota.");
+                }
             }
-            myMapControl.Center = startPoint;
-            myMapControl.ZoomLevel = 15;
+            else
+            {
+                await CriaAlerta("Não foi possível obter\na sua localização.");
+            }
+        }
+
+        private async Task CriaAlerta(string titulo)
+        {
+            ContentDialog popup = new ContentDialog();
+            popup.Title = titulo;
+            popup.Content = "Habilite a localização do seu\ndispositivo e tente novamente.";
+            popup.PrimaryButtonText = "Ok";
+            await popup.ShowAsync().AsTask().ConfigureAwait(false);
         }
 
         private async Task setCurrentPosition()
@@ -204,16 +179,17 @@ namespace saudfhub
                     currentPosition = await geolocator.GetGeopositionAsync(
                         maximumAge: TimeSpan.FromMinutes(5),
                         timeout: TimeSpan.FromSeconds(10));
+                    BasicGeoposition startLocation = new BasicGeoposition();
+                    startLocation.Latitude = currentPosition.Coordinate.Point.Position.Latitude;
+                    startLocation.Longitude = currentPosition.Coordinate.Point.Position.Longitude;
+                    startPoint = new Geopoint(startLocation);
+                    podeProsseguir = true;
                 }
                 catch (Exception)
                 {
+                    podeProsseguir = false;
                     Debug.WriteLine("Erro ao pegar localizacao do usuario");
                 }
-
-                BasicGeoposition startLocation = new BasicGeoposition();
-                startLocation.Latitude = currentPosition.Coordinate.Point.Position.Latitude;
-                startLocation.Longitude = currentPosition.Coordinate.Point.Position.Longitude;
-                startPoint = new Geopoint(startLocation);
             }
         }
 
@@ -227,13 +203,28 @@ namespace saudfhub
         private async void ListarRota()
         {
             await setCurrentPosition();
-            List<Object> ListParameters = new List<Object>()
+
+            if (routeResult != null)
             {
-                 unidade.Nome,
-                 startPoint,
-                 endPoint,
-            };
-            Frame.Navigate(typeof(UnidadeRotaPage),ListParameters);
+                Frame.Navigate(typeof(UnidadeRotaPage), routeResult);
+            }
+            else
+            {
+                if (podeProsseguir)
+                {
+                    List<Object> ListParameters = new List<Object>()
+                    {
+                         unidade.Nome,
+                         startPoint,
+                         endPoint,
+                    };
+                    Frame.Navigate(typeof(UnidadeRotaPage),ListParameters);
+                }
+                else
+                {
+                    await CriaAlerta("Não foi possível obter\na sua localização.");
+                }
+            }
         }
 
         private void Click_ListarRota(object sender, RoutedEventArgs e)
