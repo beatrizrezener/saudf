@@ -13,10 +13,11 @@
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton Icon="Directions" Label="Traçar rota" Click="Click_VerNoMapa"/>
+            <AppBarButton Icon="AllApps" Label="Listar Rota" Click="Click_ListarRota"/>
             <AppBarButton Icon="Send" Label="Sugestão" Click="Click_ReportarErro"/>
         </CommandBar>
     </Page.BottomAppBar>
-    
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
@@ -28,11 +29,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--
-            TODO: Content should be placed within the following grid 
-                  to show details for the current item
-        -->
-        <Grid Grid.Row="1" x:Name="contentRegion">
+        <Grid Grid.Row="1" x:Name="contentRegion" Margin="10,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -43,15 +40,15 @@
             </Grid.RowDefinitions>
             <TextBlock Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,10"
                         Text="TELEFONE" />
-            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Grid.Row="1"
+            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Grid.Row="1" x:Name="TextBlockTelefone"
                         Text="(99) 9999-9999"/>
             <TextBlock Style="{StaticResource TitleTextBlockStyle}" Margin="0,15,0,10"
                         Text="ENDEREÇO" Grid.Row="2"/>
-            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Grid.Row="3"
+            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Grid.Row="3" x:Name="TextBlockEndereco"
                         Text="Quadra 999 Bairo XYZ Lote 99"/>
             <TextBlock Style="{StaticResource TitleTextBlockStyle}" Margin="0,15,0,10"
                         Text="CATEGORIA" Grid.Row="4"/>
-            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Grid.Row="5"
+            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Grid.Row="5" x:Name="TextBlockTipo"
                         Text="Hospital"/>
         </Grid>
 
@@ -67,7 +64,7 @@
                         AutomationProperties.Name="Back"
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
-            <TextBlock x:Name="pageTitle" Text="Nome da Unidade" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+            <TextBlock x:Name="TextBlockNome" Text="Nome da Unidade" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
     </Grid>

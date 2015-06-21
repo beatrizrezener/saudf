@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using saudfhub.Data;
 using saudfhub.Common;
 using Windows.UI.Popups;
+using Windows.ApplicationModel.Resources;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -27,6 +28,7 @@ namespace saudfhub
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
 
         /// <summary>
         /// Gets the NavigationHelper used to aid in navigation and process lifetime management.
@@ -64,8 +66,11 @@ namespace saudfhub
 
         void ItemView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var itemId = ((SampleDataItem)e.ClickedItem).UniqueId;
-            this.Frame.Navigate(typeof(ItemPage), itemId);
+            var unidadeSelecionada = ((Unidade)e.ClickedItem);
+            if (!Frame.Navigate(typeof(UnidadePage), unidadeSelecionada.IdUnidade))
+            {
+                throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
+            }
         }
         #region NavigationHelper registration
 
