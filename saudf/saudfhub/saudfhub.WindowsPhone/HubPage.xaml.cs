@@ -75,19 +75,31 @@ namespace saudfhub
 
         }
 
-        private void CarregarListView(ListView listView)
+        private async void CarregarListView(ListView listView)
         {
             TextBox filtro = BuscarControleFilho<TextBox>(HubSaudf, "TextBoxFiltro") as TextBox;
             string chave = filtro.Text.ToUpper();
+            
+            List<Unidade> unidadesPesquisadas;
 
             if (string.IsNullOrEmpty(chave))
             {
-                listView.ItemsSource = new UnidadeDAO().Listar();
+                unidadesPesquisadas = new UnidadeDAO().Listar();
             }
             else
             {
-                listView.ItemsSource = new UnidadeDAO().Listar(chave);
+                unidadesPesquisadas = new UnidadeDAO().Listar(chave);
             }
+
+            if (unidadesPesquisadas.Count == 0)
+	        {
+                ContentDialog popup = new ContentDialog();
+                popup.Title = "Sua pesquisa não retornou resultados.";
+                popup.PrimaryButtonText = "Ok";
+                await popup.ShowAsync().AsTask().ConfigureAwait(false);
+                unidadesPesquisadas = new UnidadeDAO().Listar();                
+	        }
+            listView.ItemsSource = unidadesPesquisadas;
         }
 
         private void Click_FiltraUnidades(object sender, RoutedEventArgs e)
@@ -262,7 +274,6 @@ namespace saudfhub
                 Frame.Navigate(typeof(UnidadePage), usMaisProxima.IdUnidade);                
             }
         }
-        
         private void DefineVisibilidadeDoAnelDeProgresso(bool visivel, float eOpacidadeDe)
         {
             ProgressRing meuAneldeProgresso = BuscarControleFilho<ProgressRing>(HubSaudf, "ProgressRingPesquisaUSMaisProxima") as ProgressRing;
