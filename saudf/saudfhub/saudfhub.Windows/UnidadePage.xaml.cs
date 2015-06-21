@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Bing.Maps;
 using System.Globalization;
+using Windows.UI.Popups;
 
 // The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
 
@@ -59,6 +60,13 @@ namespace saudfhub
             {
                 double lat = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
                 double lon = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
+
+                Pushpin pushpin = new Pushpin();
+                pushpin.Tapped += new TappedEventHandler(pushpinTapped);
+
+                MapLayer.SetPosition(pushpin, new Location(lat, lon));
+                myMap.Children.Add(pushpin);
+
                 myMap.Center = new Location(lat, lon);
                 myMap.ZoomLevel = 16;
                 myMap.MapType = MapType.Road;
@@ -67,7 +75,13 @@ namespace saudfhub
             {
                
             }
-        }  
+        }
+
+        private async void pushpinTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            MessageDialog dialog = new MessageDialog(unidade.Nome);
+            await dialog.ShowAsync();
+        }
 
         private void Click_TracarRota(object sender, RoutedEventArgs e)
         {
