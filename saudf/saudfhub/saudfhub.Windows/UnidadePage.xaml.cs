@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Bing.Maps;
+using System.Globalization;
 
 // The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
 
@@ -49,7 +51,23 @@ namespace saudfhub
             TextBlockTelefone.Text = (unidade as Unidade).Telefone;
             TextBlockEndereco.Text = (unidade as Unidade).Bairro + " " + (unidade as Unidade).Endereco;
             TextBlockTipo.Text = (unidade as Unidade).Tipo;
+            InitializeMap();
         }
+        void InitializeMap()
+        {
+            try
+            {
+                double lat = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
+                double lon = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
+                myMap.Center = new Location(lat, lon);
+                myMap.ZoomLevel = 16;
+                myMap.MapType = MapType.Road;
+            }
+            catch (Exception)
+            {
+               
+            }
+        }  
 
         private void Click_TracarRota(object sender, RoutedEventArgs e)
         {

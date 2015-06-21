@@ -50,7 +50,7 @@
             <TextBlock Style="{StaticResource TitleTextBlockStyle}" Margin="0,15,0,10"
                         Text="ENDEREÇO" Grid.Column="0" Grid.Row="2"/>
             <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Grid.Column="0" Grid.Row="3" x:Name="TextBlockEndereco"
-                        Text="Quadra 999 Bairo XYZ Lote 99"/>
+                        Text="Quadra 999 Bairo XYZ Lote 99" TextWrapping="Wrap"/>
             <TextBlock Style="{StaticResource TitleTextBlockStyle}" Margin="0,15,0,10"
                         Text="CATEGORIA" Grid.Column="0" Grid.Row="4"/>
             <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Grid.Column="0" Grid.Row="5" x:Name="TextBlockTipo"
@@ -58,14 +58,14 @@
         </Grid>
 
         <bm:Map Grid.Row="1" Grid.Column="1" Credentials="Al6Uie4xlIbN6vrxLLp2asHVqSKM8cvnc3oWmAm67vPfPhGTFJ5UTkAH03NUk6QU" 
-                x:Name="myMap" ZoomLevel="12">
+                x:Name="myMap" ZoomLevel="12" Margin="20,10,10,10">
             <bm:Map.Center>
                 <bm:Location Latitude="-15.780148200000" Longitude="-47.92916980000001" />
             </bm:Map.Center>
         </bm:Map>
 
         <!-- Back button and page title -->
-        <Grid>
+        <Grid Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
