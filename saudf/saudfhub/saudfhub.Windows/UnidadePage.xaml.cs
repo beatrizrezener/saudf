@@ -18,6 +18,7 @@ using System.Globalization;
 using Windows.UI.Popups;
 using Windows.Devices.Geolocation;
 using System.Threading;
+using System.Threading.Tasks;
 
 // The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
 
@@ -28,6 +29,7 @@ namespace saudfhub
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private Unidade unidade = new Unidade();
+        Location userPosition = new Location();
         
         // maps variables 
         private Geolocator _geolocator = null;
@@ -47,6 +49,8 @@ namespace saudfhub
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
+
+            _geolocator = new Geolocator();
         }
 
         private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
@@ -96,17 +100,15 @@ namespace saudfhub
 
         public async void GetDirections()
         {
+            await setUserPosition();
 
-            double startLat = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
-            double startLong = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
             double endLat = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
             double endLong = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
 
-            Location startPoint = new Location(-15.780148200000, -47.92916980000001);
             Location endPoint = new Location(endLat, endLong);
 
             // Set the start and end waypoints
-            Bing.Maps.Directions.Waypoint startWaypoint = new Bing.Maps.Directions.Waypoint(startPoint);
+            Bing.Maps.Directions.Waypoint startWaypoint = new Bing.Maps.Directions.Waypoint(userPosition);
             Bing.Maps.Directions.Waypoint endWaypoint = new Bing.Maps.Directions.Waypoint(endPoint);
 
             Bing.Maps.Directions.WaypointCollection waypoints = new Bing.Maps.Directions.WaypointCollection();
@@ -122,6 +124,18 @@ namespace saudfhub
             // Display the route on the map
             directionsManager.ShowRoutePath(response.Routes[0]);
 
+            myMap.Center = userPosition;
+            myMap.ZoomLevel = 13;
+
+        }
+
+        private async Task setUserPosition()
+        {
+            _cts = new CancellationTokenSource();
+            CancellationToken token = _cts.Token;
+            Geoposition pos = await _geolocator.GetGeopositionAsync().AsTask(token);
+
+            userPosition = new Location(pos.Coordinate.Point.Position.Latitude, pos.Coordinate.Point.Position.Longitude);
 
         }
 
