@@ -27,8 +27,6 @@ using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-// The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
-
 namespace saudfhub
 {
     public sealed partial class HubPage : Page
