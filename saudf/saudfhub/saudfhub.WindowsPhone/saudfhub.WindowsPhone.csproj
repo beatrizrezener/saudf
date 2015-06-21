@@ -109,6 +109,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\atendimento_a_mulher.jpg" />
     <Content Include="Assets\Emergencia\Bombeiros.png" />
     <Content Include="Assets\Emergencia\BrasaoPMDF.gif" />
     <Content Include="Assets\Emergencia\disque-denuncia.png" />
@@ -122,6 +123,7 @@
     <Content Include="Assets\PinkPushPin.png" />
     <Content Include="Assets\Emergencia\policia_militar.png" />
     <Content Include="Assets\Emergencia\Samu.png" />
+    <Content Include="Assets\Pointer_Advice_128.png" />
     <Content Include="Assets\saudf.png" />
     <Content Include="Assets\hearth.png" />
     <Content Include="Assets\SmallLogo.scale-100.png" />
@@ -137,6 +139,8 @@
     <Content Include="Assets\StoreLogo.scale-140.png" />
     <Content Include="Assets\StoreLogo.scale-240.png" />
     <Content Include="Assets\UnidadeProxima.jpg" />
+    <Content Include="Assets\UnidadeProxima_.jpg" />
+    <Content Include="Assets\UnidadeProxima_old.jpg" />
     <Content Include="Assets\WideLogo.scale-100.png" />
     <Content Include="Assets\WideLogo.scale-140.png" />
     <Content Include="Assets\WideLogo.scale-240.png" />

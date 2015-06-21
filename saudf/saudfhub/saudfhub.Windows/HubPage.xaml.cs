@@ -190,19 +190,30 @@ namespace saudfhub
 
         #endregion
 
-        private void CarregarListView(ListView listView)
+        private async void CarregarListView(ListView listView)
         {
-            TextBox filtro = BuscarControleFilho<TextBox>(HubSaudf, "TextBoxFiltro") as TextBox;
+           TextBox filtro = BuscarControleFilho<TextBox>(HubSaudf, "TextBoxFiltro") as TextBox;
             string chave = filtro.Text.ToUpper();
+            
+            List<Unidade> unidadesPesquisadas;
 
             if (string.IsNullOrEmpty(chave))
             {
-                listView.ItemsSource = new UnidadeDAO().Listar();
+                unidadesPesquisadas = new UnidadeDAO().Listar();
             }
             else
             {
-                listView.ItemsSource = new UnidadeDAO().Listar(chave);
+                unidadesPesquisadas = new UnidadeDAO().Listar(chave);
             }
+
+            if (unidadesPesquisadas.Count == 0)
+	        {
+                MessageDialog mensagem = new MessageDialog("Sua pesquisa não retornou resultados.");
+                await mensagem.ShowAsync();
+                unidadesPesquisadas = new UnidadeDAO().Listar();
+                filtro.Text = "";
+            }
+            listView.ItemsSource = unidadesPesquisadas;
         }
 
         private void Click_FiltraUnidades(object sender, RoutedEventArgs e)
