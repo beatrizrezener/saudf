@@ -19,6 +19,7 @@ using Windows.UI.Popups;
 using Windows.Devices.Geolocation;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Documents;
 
 namespace saudfhub
 {
@@ -95,8 +96,14 @@ namespace saudfhub
             GetDirections();
         }
 
+        Bing.Maps.Directions.RouteResponse response;
+        Bing.Maps.Directions.DirectionsManager directionsManager;
+
         public async void GetDirections()
         {
+            myMap.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            scrollView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+
             await setUserPosition();
 
             double endLat = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
@@ -112,27 +119,28 @@ namespace saudfhub
             waypoints.Add(startWaypoint);
             waypoints.Add(endWaypoint);
 
-            Bing.Maps.Directions.DirectionsManager directionsManager = myMap.DirectionsManager;
+            directionsManager = myMap.DirectionsManager;
             directionsManager.Waypoints = waypoints;
 
             // Calculate route directions
-            Bing.Maps.Directions.RouteResponse response = await directionsManager.CalculateDirectionsAsync();
+            response = await directionsManager.CalculateDirectionsAsync();
 
             // Display the route on the map
             directionsManager.ShowRoutePath(response.Routes[0]);
 
             myMap.Center = userPosition;
-
         }
 
         private async Task setUserPosition()
         {
             try
             {
+                scrollView.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 messageTextBox.Text = "Traçando rota. Por favor, aguarde um momento.";
                 // Get the location.
                 Geoposition pos = await _geolocator.GetGeopositionAsync().AsTask();
                 messageTextBox.Text = "";
+                scrollView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
                 userPosition = new Location(pos.Coordinate.Point.Position.Latitude, pos.Coordinate.Point.Position.Longitude);
 
@@ -184,8 +192,47 @@ namespace saudfhub
 
         private void Click_ListarRota(object sender, RoutedEventArgs e)
         {
+            myMap.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
+            messageTextBox.Text = "";
+            scrollView.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            // Display summary info about the route.
+            messageTextBox.Inlines.Add(new Run()
+            {
+                Text = "Tempo estimado (minutos) = "
+                  + directionsManager.RouteSummaryView
+            });
+            messageTextBox.Inlines.Add(new LineBreak());
+            messageTextBox.Inlines.Add(new Run()
+            {
+                Text = "Distância (quilômetros) = "
+                  + response.Routes[0].TravelDuration.ToString()
+            });
+            messageTextBox.Inlines.Add(new LineBreak());
+            messageTextBox.Inlines.Add(new LineBreak());
+            // Display the directions.
+            messageTextBox.Inlines.Add(new Run()
+            {
+                Text = "Direções",
+                FontSize = 25
+            });
+            messageTextBox.Inlines.Add(new LineBreak());
+
+            var listItems = response.Routes[0].RouteLegs[0].ItineraryItems.ToList();
+            var items = response.Routes[0].RouteLegs[0].ItineraryItems.Count;
+
+            for (int i = 0; i < items; i++)
+            {
+                messageTextBox.Inlines.Add(new Run()
+                {
+                    Text = (i + 1).ToString() + ". "
+                });
+                messageTextBox.Inlines.Add(new Run()
+                {
+                    Text = listItems[i].Instruction.Text
+                });
+                messageTextBox.Inlines.Add(new LineBreak());
+            }
         }
-
     }
 }

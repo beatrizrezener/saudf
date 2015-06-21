@@ -58,12 +58,10 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" x:Name="messageTextBox" Text=""  Margin="20,0,0,0" Style="{StaticResource TitleTextBlockStyle}"/>
-            <bm:Map Grid.Row="1" Credentials="Al6Uie4xlIbN6vrxLLp2asHVqSKM8cvnc3oWmAm67vPfPhGTFJ5UTkAH03NUk6QU" 
+            <ScrollViewer x:Name="scrollView" Visibility="Collapsed">
+                <TextBlock x:Name="messageTextBox" Text=""  Margin="20,0,0,0" Style="{StaticResource TitleTextBlockStyle}"/>
+            </ScrollViewer>
+            <bm:Map Credentials="Al6Uie4xlIbN6vrxLLp2asHVqSKM8cvnc3oWmAm67vPfPhGTFJ5UTkAH03NUk6QU" 
                     x:Name="myMap" ZoomLevel="12" Margin="20,10,10,10">
                 <bm:Map.Center>
                     <bm:Location Latitude="-15.780148200000" Longitude="-47.92916980000001" />
