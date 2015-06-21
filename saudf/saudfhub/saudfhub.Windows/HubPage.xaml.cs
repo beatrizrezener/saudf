@@ -16,31 +16,26 @@ using saudfhub.Data;
 using saudfhub.Common;
 using Windows.UI.Popups;
 using Windows.ApplicationModel.Resources;
-
-// The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
+using System.Threading.Tasks;
+using Windows.Devices.Geolocation;
+using System.Globalization;
 
 namespace saudfhub
 {
-    /// <summary>
-    /// A page that displays a grouped collection of items.
-    /// </summary>
     public sealed partial class HubPage : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
+        private Geoposition geoposition;
+        private bool podeProsseguir = false;
+        private Unidade usMaisProxima = new Unidade();
 
-        /// <summary>
-        /// Gets the NavigationHelper used to aid in navigation and process lifetime management.
-        /// </summary>
         public NavigationHelper NavigationHelper
         {
             get { return this.navigationHelper; }
         }
 
-        /// <summary>
-        /// Gets the DefaultViewModel. This can be changed to a strongly typed view model.
-        /// </summary>
         public ObservableDictionary DefaultViewModel
         {
             get { return this.defaultViewModel; }
@@ -62,6 +57,106 @@ namespace saudfhub
         {
             var listView = (ListView)sender;
             CarregarListView(listView);
+        }
+
+        private void USMaisProxima_Click(object sender, RoutedEventArgs e)
+        {
+            //DefineVisibilidadeDoAnelDeProgresso(visivel: true, eOpacidadeDe: 0.2f);
+            UnidadeMaisProxima();
+        }
+        private async void UnidadeMaisProxima()
+        {
+            await getMyPosition();
+            DefineVisibilidadeDoAnelDeProgresso(visivel: false, eOpacidadeDe: 1.0f);
+            if (podeProsseguir)
+            {
+                Frame.Navigate(typeof(UnidadePage), usMaisProxima.IdUnidade);
+            }
+        }
+
+        private async Task getMyPosition()
+        {
+            Geolocator geolocator = new Geolocator();
+            geolocator.DesiredAccuracyInMeters = 50;
+
+            geoposition = null;
+
+            try
+            {
+                geoposition = await geolocator.GetGeopositionAsync(
+                    maximumAge: TimeSpan.FromMinutes(5),
+                    timeout: TimeSpan.FromSeconds(10));
+                podeProsseguir = true;
+                getUnidadeMaisProxima();
+            }
+            catch (Exception)
+            {
+                podeProsseguir = false;
+            }
+
+            if (!podeProsseguir)
+            {
+                MessageDialog popup = new MessageDialog("Não foi possível obter\na sua localização.", "Verifique sua conexão com a internet\ne tente novamente.");
+                await popup.ShowAsync();
+            }
+        }
+        private void getUnidadeMaisProxima()
+        {
+            List<Unidade> unidadesProximas = new UnidadeDAO().Listar();
+
+            var fromLatFloat = geoposition.Coordinate.Point.Position.Latitude;
+            var fromLonFloat = geoposition.Coordinate.Point.Position.Longitude;
+
+            double menor = 20000;
+
+            for (int i = 0; i < unidadesProximas.Count; i++)
+            {
+                var usCorrente = unidadesProximas[i];
+
+                var toLatFloat = double.Parse(usCorrente.Latitude, CultureInfo.InvariantCulture);
+                var toLonFloat = double.Parse(usCorrente.Longitude, CultureInfo.InvariantCulture);
+
+                var distance = computeDistanceBetweenTwoLatLon(fromLatFloat, fromLonFloat, toLatFloat, toLonFloat);
+                if (distance < menor)
+                {
+                    menor = distance;
+                    usMaisProxima = usCorrente;
+                }
+            }
+        }
+        private Double rad2deg(Double rad)
+        {
+            return (rad / Math.PI * 180.0);
+        }
+        private Double deg2rad(Double deg)
+        {
+            return (deg * Math.PI / 180.0);
+        }
+        private double computeDistanceBetweenTwoLatLon(double fromLat, double fromLon, double toLat, double toLon)
+        {
+            //If the same point
+            if ((fromLat == toLat) && (fromLon == toLon))
+            {
+                return 0.0;
+            }
+            // Compute the distance with the haversine formula
+            var distanceRad = Math.Acos(Math.Sin(deg2rad(fromLat)) * Math.Sin(deg2rad(toLat)) +
+                        Math.Cos(deg2rad(fromLat)) * Math.Cos(deg2rad(toLat)) *
+                        Math.Cos(deg2rad(fromLon - toLon)));
+            var distanceDegree = rad2deg(distanceRad);
+            // Distance in miles and KM - Add others if needed
+            var miles = (double)distanceDegree * 69.0;
+            var kilometers = (double)miles * 1.61;
+            // return km = miles * 1.61
+            return Math.Round(kilometers, 2);
+        }
+        private void DefineVisibilidadeDoAnelDeProgresso(bool visivel, float eOpacidadeDe)
+        {
+            ProgressRing meuAneldeProgresso = BuscarControleFilho<ProgressRing>(HubSaudf, "ProgressRingPesquisaUSMaisProxima") as ProgressRing;
+            Image imagemDeFundo = BuscarControleFilho<Image>(HubSaudf, "ImageMapa") as Image;
+            imagemDeFundo.Opacity = eOpacidadeDe;
+            HubSaudf.IsEnabled = !visivel;
+            meuAneldeProgresso.IsActive = visivel;
         }
 
         void ItemView_ItemClick(object sender, ItemClickEventArgs e)
@@ -95,10 +190,6 @@ namespace saudfhub
 
         #endregion
 
-        private void USMaisProxima_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
         private void CarregarListView(ListView listView)
         {
             TextBox filtro = BuscarControleFilho<TextBox>(HubSaudf, "TextBoxFiltro") as TextBox;
