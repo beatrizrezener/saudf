@@ -51,7 +51,7 @@ namespace saudfhub
             TextBlockTipo.Text = (unidade as Unidade).Tipo;
         }
 
-        private void Click_VerNoMapa(object sender, RoutedEventArgs e)
+        private void Click_TracarRota(object sender, RoutedEventArgs e)
         {
             
         }
