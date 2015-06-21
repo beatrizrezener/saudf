@@ -16,6 +16,9 @@ using Windows.UI.Xaml.Navigation;
 using Bing.Maps;
 using System.Globalization;
 using Windows.UI.Popups;
+using Windows.Devices.Geolocation;
+using System.Threading;
+using System.Threading.Tasks;
 
 // The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
 
@@ -26,6 +29,11 @@ namespace saudfhub
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private Unidade unidade = new Unidade();
+        Location userPosition = new Location();
+        
+        // maps variables 
+        private Geolocator _geolocator = null;
+        private CancellationTokenSource _cts = null;
         public ObservableDictionary DefaultViewModel
         {
             get { return this.defaultViewModel; }
@@ -41,6 +49,8 @@ namespace saudfhub
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
+
+            _geolocator = new Geolocator();
         }
 
         private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
@@ -85,7 +95,48 @@ namespace saudfhub
 
         private void Click_TracarRota(object sender, RoutedEventArgs e)
         {
-            
+            GetDirections();
+        }
+
+        public async void GetDirections()
+        {
+            await setUserPosition();
+
+            double endLat = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
+            double endLong = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
+
+            Location endPoint = new Location(endLat, endLong);
+
+            // Set the start and end waypoints
+            Bing.Maps.Directions.Waypoint startWaypoint = new Bing.Maps.Directions.Waypoint(userPosition);
+            Bing.Maps.Directions.Waypoint endWaypoint = new Bing.Maps.Directions.Waypoint(endPoint);
+
+            Bing.Maps.Directions.WaypointCollection waypoints = new Bing.Maps.Directions.WaypointCollection();
+            waypoints.Add(startWaypoint);
+            waypoints.Add(endWaypoint);
+
+            Bing.Maps.Directions.DirectionsManager directionsManager = myMap.DirectionsManager;
+            directionsManager.Waypoints = waypoints;
+
+            // Calculate route directions
+            Bing.Maps.Directions.RouteResponse response = await directionsManager.CalculateDirectionsAsync();
+
+            // Display the route on the map
+            directionsManager.ShowRoutePath(response.Routes[0]);
+
+            myMap.Center = userPosition;
+            myMap.ZoomLevel = 13;
+
+        }
+
+        private async Task setUserPosition()
+        {
+            _cts = new CancellationTokenSource();
+            CancellationToken token = _cts.Token;
+            Geoposition pos = await _geolocator.GetGeopositionAsync().AsTask(token);
+
+            userPosition = new Location(pos.Coordinate.Point.Position.Latitude, pos.Coordinate.Point.Position.Longitude);
+
         }
 
         private void Click_ReportarErro(object sender, RoutedEventArgs e)
@@ -120,5 +171,6 @@ namespace saudfhub
         {
 
         }
+
     }
 }
