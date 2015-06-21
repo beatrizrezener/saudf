@@ -31,7 +31,7 @@ namespace saudfhub
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private Unidade unidade = new Unidade();
-        Location userPosition = new Location();
+        Location userPosition = null;
         
         // maps variables 
         private Geolocator _geolocator = null;
@@ -94,73 +94,77 @@ namespace saudfhub
             await dialog.ShowAsync();
         }
 
-        private void Click_TracarRota(object sender, RoutedEventArgs e)
-        {
-            GetDirections();
-        }
-
-        Bing.Maps.Directions.RouteResponse response;
-        Bing.Maps.Directions.DirectionsManager directionsManager;
-
-        public async void GetDirections()
+        private async void Click_TracarRota(object sender, RoutedEventArgs e)
         {
             myMap.Visibility = Windows.UI.Xaml.Visibility.Visible;
             scrollView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            await GetDirections();
+        }
 
+        Bing.Maps.Directions.RouteResponse response = null;
+
+        public async Task GetDirections()
+        {
             await setUserPosition();
 
-            double endLat = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
-            double endLong = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
+            if (response == null)
+            {
+                double endLat = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
+                double endLong = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
 
-            Location endPoint = new Location(endLat, endLong);
+                Location endPoint = new Location(endLat, endLong);
 
-            // Set the start and end waypoints
-            Bing.Maps.Directions.Waypoint startWaypoint = new Bing.Maps.Directions.Waypoint(userPosition);
-            Bing.Maps.Directions.Waypoint endWaypoint = new Bing.Maps.Directions.Waypoint(endPoint);
+                // Set the start and end waypoints
+                Bing.Maps.Directions.Waypoint startWaypoint = new Bing.Maps.Directions.Waypoint(userPosition);
+                Bing.Maps.Directions.Waypoint endWaypoint = new Bing.Maps.Directions.Waypoint(endPoint);
 
-            Bing.Maps.Directions.WaypointCollection waypoints = new Bing.Maps.Directions.WaypointCollection();
-            waypoints.Add(startWaypoint);
-            waypoints.Add(endWaypoint);
+                Bing.Maps.Directions.WaypointCollection waypoints = new Bing.Maps.Directions.WaypointCollection();
+                waypoints.Add(startWaypoint);
+                waypoints.Add(endWaypoint);
+            
+                Bing.Maps.Directions.DirectionsManager directionsManager = myMap.DirectionsManager;
+                directionsManager.Waypoints = waypoints;
 
-            directionsManager = myMap.DirectionsManager;
-            directionsManager.Waypoints = waypoints;
+                // Calculate route directions
+                response = await directionsManager.CalculateDirectionsAsync();
 
-            // Calculate route directions
-            response = await directionsManager.CalculateDirectionsAsync();
+                // Display the route on the map
+                directionsManager.ShowRoutePath(response.Routes[0]);
 
-            // Display the route on the map
-            directionsManager.ShowRoutePath(response.Routes[0]);
-
-            myMap.Center = userPosition;
+                myMap.Center = userPosition;
+            }
         }
 
         private async Task setUserPosition()
         {
-            try
+            if (userPosition == null)
             {
-                scrollView.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                messageTextBox.Text = "Traçando rota. Por favor, aguarde um momento.";
-                // Get the location.
-                Geoposition pos = await _geolocator.GetGeopositionAsync().AsTask();
-                messageTextBox.Text = "";
-                scrollView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-
-                userPosition = new Location(pos.Coordinate.Point.Position.Latitude, pos.Coordinate.Point.Position.Longitude);
-
-
-                // Setting the zoom level of the map based on the accuracy of user location data.
-                if (pos.Coordinate.Accuracy <= 10)
+                try
                 {
-                    myMap.ZoomLevel = 15.0f;
+                    scrollView.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    messageTextBox.Text = "Traçando rota. Por favor, aguarde um momento.";
+                    // Get the location.
+                    Geoposition pos = await _geolocator.GetGeopositionAsync().AsTask();
+                    messageTextBox.Text = "";
+                    scrollView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+
+                    userPosition = new Location(pos.Coordinate.Point.Position.Latitude, pos.Coordinate.Point.Position.Longitude);
+
+
+                    // Setting the zoom level of the map based on the accuracy of user location data.
+                    if (pos.Coordinate.Accuracy <= 10)
+                    {
+                        myMap.ZoomLevel = 15.0f;
+                    }
+                    else if (pos.Coordinate.Accuracy <= 100)
+                    {
+                        myMap.ZoomLevel = 14.0f;
+                    }
                 }
-                else if (pos.Coordinate.Accuracy <= 100)
+                catch (System.UnauthorizedAccessException)
                 {
-                    myMap.ZoomLevel = 14.0f;
+                    messageTextBox.Text = "Localização desabilitada.";
                 }
-            }
-            catch (System.UnauthorizedAccessException)
-            {
-                messageTextBox.Text = "Localização desabilitada.";
             }
 
         }
@@ -188,12 +192,12 @@ namespace saudfhub
 
         #endregion
 
-        private void Click_ListarRota(object sender, RoutedEventArgs e)
+        private async void Click_ListarRota(object sender, RoutedEventArgs e)
         {
+
+            await GetDirections();
             myMap.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             scrollView.Visibility = Windows.UI.Xaml.Visibility.Visible;
-
-            messageTextBox.Text = "";
             
             messageTextBox.Inlines.Add(new Run()
             {
@@ -230,6 +234,8 @@ namespace saudfhub
                 });
                 messageTextBox.Inlines.Add(new LineBreak());
             }
+
+            Debug.WriteLine(messageTextBox.Text);
         }
 
         private async void Click_ReportarErro(object sender, RoutedEventArgs e)
