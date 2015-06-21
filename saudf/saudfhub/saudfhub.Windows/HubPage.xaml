@@ -126,8 +126,7 @@
                                 Name="ListViewTelefonesEmergencia" 
                                 Loaded="TelefonesEmergencia_Loaded"
                                 SelectionMode="None"
-                                IsItemClickEnabled="True"
-                                ItemClick="ItemTelefone_ItemClick"
+                                IsItemClickEnabled="False"
                                 Grid.Row="0">
                             <ListView.ItemTemplate>
                                 <DataTemplate>

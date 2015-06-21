@@ -227,11 +227,6 @@ namespace saudfhub
             listView.ItemsSource = numerosTelefoneEmergencia;
 
         }
-        private async void ItemTelefone_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            MessageDialog popup = new MessageDialog("Essa funcionalidade só está disponível em celulares.","Desculpe!");
-            await popup.ShowAsync();
-        }
 
         private DependencyObject BuscarControleFilho<T>(DependencyObject controle, string controleFilho)
         {
