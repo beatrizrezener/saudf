@@ -57,13 +57,19 @@
                         Text="Hospital"/>
         </Grid>
 
-        <bm:Map Grid.Row="1" Grid.Column="1" Credentials="Al6Uie4xlIbN6vrxLLp2asHVqSKM8cvnc3oWmAm67vPfPhGTFJ5UTkAH03NUk6QU" 
-                x:Name="myMap" ZoomLevel="12" Margin="20,10,10,10">
-            <bm:Map.Center>
-                <bm:Location Latitude="-15.780148200000" Longitude="-47.92916980000001" />
-            </bm:Map.Center>
-        </bm:Map>
-
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" x:Name="messageTextBox" Text=""  Margin="20,0,0,0" Style="{StaticResource TitleTextBlockStyle}"/>
+            <bm:Map Grid.Row="1" Credentials="Al6Uie4xlIbN6vrxLLp2asHVqSKM8cvnc3oWmAm67vPfPhGTFJ5UTkAH03NUk6QU" 
+                    x:Name="myMap" ZoomLevel="12" Margin="20,10,10,10">
+                <bm:Map.Center>
+                    <bm:Location Latitude="-15.780148200000" Longitude="-47.92916980000001" />
+                </bm:Map.Center>
+            </bm:Map>
+        </Grid>
         <!-- Back button and page title -->
         <Grid Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>

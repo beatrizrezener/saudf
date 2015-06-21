@@ -20,8 +20,6 @@ using Windows.Devices.Geolocation;
 using System.Threading;
 using System.Threading.Tasks;
 
-// The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
-
 namespace saudfhub
 {
     public sealed partial class UnidadePage : Page
@@ -33,7 +31,6 @@ namespace saudfhub
         
         // maps variables 
         private Geolocator _geolocator = null;
-        private CancellationTokenSource _cts = null;
         public ObservableDictionary DefaultViewModel
         {
             get { return this.defaultViewModel; }
@@ -125,17 +122,35 @@ namespace saudfhub
             directionsManager.ShowRoutePath(response.Routes[0]);
 
             myMap.Center = userPosition;
-            myMap.ZoomLevel = 13;
 
         }
 
         private async Task setUserPosition()
         {
-            _cts = new CancellationTokenSource();
-            CancellationToken token = _cts.Token;
-            Geoposition pos = await _geolocator.GetGeopositionAsync().AsTask(token);
+            try
+            {
+                messageTextBox.Text = "Traçando rota. Por favor, aguarde um momento.";
+                // Get the location.
+                Geoposition pos = await _geolocator.GetGeopositionAsync().AsTask();
+                messageTextBox.Text = "";
 
-            userPosition = new Location(pos.Coordinate.Point.Position.Latitude, pos.Coordinate.Point.Position.Longitude);
+                userPosition = new Location(pos.Coordinate.Point.Position.Latitude, pos.Coordinate.Point.Position.Longitude);
+
+
+                // Setting the zoom level of the map based on the accuracy of user location data.
+                if (pos.Coordinate.Accuracy <= 10)
+                {
+                    myMap.ZoomLevel = 15.0f;
+                }
+                else if (pos.Coordinate.Accuracy <= 100)
+                {
+                    myMap.ZoomLevel = 14.0f;
+                }
+            }
+            catch (System.UnauthorizedAccessException)
+            {
+                messageTextBox.Text = "Localização desabilitada.";
+            }
 
         }
 
