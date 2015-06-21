@@ -94,10 +94,11 @@ namespace saudfhub
             if (unidadesPesquisadas.Count == 0)
 	        {
                 ContentDialog popup = new ContentDialog();
-                popup.Title = "Sua pesquisa não retornou resultados.";
+                popup.Title = "Sua pesquisa não retornou\nresultados.";
                 popup.PrimaryButtonText = "Ok";
-                await popup.ShowAsync().AsTask().ConfigureAwait(false);
-                unidadesPesquisadas = new UnidadeDAO().Listar();                
+                await popup.ShowAsync();
+                unidadesPesquisadas = new UnidadeDAO().Listar();
+                filtro.Text = "";
 	        }
             listView.ItemsSource = unidadesPesquisadas;
         }
