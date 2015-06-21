@@ -12,7 +12,7 @@
     mc:Ignorable="d">
 
     <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar IsOpen="True">
             <AppBarButton Icon="Directions" Label="Traçar rota" Click="Click_TracarRota"/>
             <AppBarButton Icon="AllApps" Label="Listar Rota" Click="Click_ListarRota"/>
             <AppBarButton Icon="Send" Label="Sugestão" Click="Click_ReportarErro"/>

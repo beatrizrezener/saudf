@@ -16,6 +16,8 @@ using Windows.UI.Xaml.Navigation;
 using Bing.Maps;
 using System.Globalization;
 using Windows.UI.Popups;
+using Windows.Devices.Geolocation;
+using System.Threading;
 
 // The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
 
@@ -26,6 +28,10 @@ namespace saudfhub
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private Unidade unidade = new Unidade();
+        
+        // maps variables 
+        private Geolocator _geolocator = null;
+        private CancellationTokenSource _cts = null;
         public ObservableDictionary DefaultViewModel
         {
             get { return this.defaultViewModel; }
@@ -85,7 +91,38 @@ namespace saudfhub
 
         private void Click_TracarRota(object sender, RoutedEventArgs e)
         {
-            
+            GetDirections();
+        }
+
+        public async void GetDirections()
+        {
+
+            double startLat = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
+            double startLong = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
+            double endLat = double.Parse(unidade.Latitude, CultureInfo.InvariantCulture);
+            double endLong = double.Parse(unidade.Longitude, CultureInfo.InvariantCulture);
+
+            Location startPoint = new Location(-15.780148200000, -47.92916980000001);
+            Location endPoint = new Location(endLat, endLong);
+
+            // Set the start and end waypoints
+            Bing.Maps.Directions.Waypoint startWaypoint = new Bing.Maps.Directions.Waypoint(startPoint);
+            Bing.Maps.Directions.Waypoint endWaypoint = new Bing.Maps.Directions.Waypoint(endPoint);
+
+            Bing.Maps.Directions.WaypointCollection waypoints = new Bing.Maps.Directions.WaypointCollection();
+            waypoints.Add(startWaypoint);
+            waypoints.Add(endWaypoint);
+
+            Bing.Maps.Directions.DirectionsManager directionsManager = myMap.DirectionsManager;
+            directionsManager.Waypoints = waypoints;
+
+            // Calculate route directions
+            Bing.Maps.Directions.RouteResponse response = await directionsManager.CalculateDirectionsAsync();
+
+            // Display the route on the map
+            directionsManager.ShowRoutePath(response.Routes[0]);
+
+
         }
 
         private void Click_ReportarErro(object sender, RoutedEventArgs e)
@@ -120,5 +157,6 @@ namespace saudfhub
         {
 
         }
+
     }
 }
