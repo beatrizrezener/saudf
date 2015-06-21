@@ -44,6 +44,7 @@ namespace saudfhub
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            ProgressRingDefineDirecoes.IsActive = true;
             if (e.Parameter.GetType() == typeof(MapRouteFinderResult))
             {
                 MapRouteFinderResult routeResult = e.Parameter as MapRouteFinderResult;
@@ -57,6 +58,8 @@ namespace saudfhub
                 endPoint = parameters[2] as Geopoint;
                 ListarRota();
 	        }
+
+            ProgressRingDefineDirecoes.IsActive = false;
         }
 
         private void ListarRota(MapRouteFinderResult rota)
@@ -120,6 +123,7 @@ namespace saudfhub
 
                 if (routeResult.Status == MapRouteFinderStatus.Success)
                 {
+                    tbTurnByTurn.Text = "";
                     // Display summary info about the route.
                     tbTurnByTurn.Inlines.Add(new Run()
                     {
