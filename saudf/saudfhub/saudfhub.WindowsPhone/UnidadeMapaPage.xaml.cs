@@ -50,11 +50,24 @@ namespace saudfhub
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
         }
 
+        #region NavigationHelper registration
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            this.navigationHelper.OnNavigatedTo(e);
+            setEndPoint();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            this.navigationHelper.OnNavigatedFrom(e);
+        }
+
+        #endregion
         public NavigationHelper NavigationHelper
         {
             get { return this.navigationHelper; }
         }
-
         public ObservableDictionary DefaultViewModel
         {
             get { return this.defaultViewModel; }
@@ -67,7 +80,10 @@ namespace saudfhub
             TextBlockNome.Text = (unidade as Unidade).Nome;
             showUnidadeNoMapa();
         }
-
+        private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
+        {
+        }
+        
         private void showUnidadeNoMapa()
         {
             MapIcon mapIcon = new MapIcon();
@@ -89,30 +105,11 @@ namespace saudfhub
 
         }
 
-        private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
-        {
-        }
-
-        #region NavigationHelper registration
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            this.navigationHelper.OnNavigatedTo(e);
-            setEndPoint();
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            this.navigationHelper.OnNavigatedFrom(e);
-        }
-
-        #endregion
 
         private void Click_TracarRota(object sender, RoutedEventArgs e)
         {
             ShowRotaNoMapa();
         }
-        
         private async void ShowRotaNoMapa()
         {
 
@@ -142,10 +139,8 @@ namespace saudfhub
                     myMapControl.Routes.Add(viewOfRoute);
 
                     // Fit the MapControl to the route.
-                    await myMapControl.TrySetViewBoundsAsync(
-                                    routeResult.Route.BoundingBox,
-                                    null,
-                                    Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
+                    await myMapControl.TrySetViewBoundsAsync(routeResult.Route.BoundingBox, null,
+                        Windows.UI.Xaml.Controls.Maps.MapAnimationKind.None);
                     myMapControl.Center = startPoint;
                     myMapControl.ZoomLevel = 15;
                     
@@ -163,15 +158,38 @@ namespace saudfhub
             ProgressRingTracarRota.IsActive = false;
         }
 
-        private async Task CriaAlerta(string titulo)
+        private void Click_ListarRota(object sender, RoutedEventArgs e)
         {
-            ContentDialog popup = new ContentDialog();
-            popup.Title = titulo;
-            popup.Content = "Habilite a localização do seu\ndispositivo e tente novamente.";
-            popup.PrimaryButtonText = "Ok";
-            await popup.ShowAsync().AsTask().ConfigureAwait(false);
+            ListarRota();
         }
+        private async void ListarRota()
+        {
+            ProgressRingTracarRota.IsActive = true;
+            await setCurrentPosition();
 
+            if (routeResult != null)
+            {
+                Frame.Navigate(typeof(UnidadeRotaPage), routeResult);
+            }
+            else
+            {
+                if (podeProsseguir)
+                {
+                    List<Object> ListParameters = new List<Object>()
+                    {
+                         unidade.Nome,
+                         startPoint,
+                         endPoint,
+                    };
+                    Frame.Navigate(typeof(UnidadeRotaPage),ListParameters);
+                }
+                else
+                {
+                    await CriaAlerta("Não foi possível obter\na sua localização.");
+                }
+            }
+            ProgressRingTracarRota.IsActive = false;
+        }
         private async Task setCurrentPosition()
         {
             if (startPoint == null)
@@ -204,38 +222,13 @@ namespace saudfhub
 
             endPoint= new Geopoint(endLocation);
         }
-        private async void ListarRota()
+        private async Task CriaAlerta(string titulo)
         {
-            ProgressRingTracarRota.IsActive = true;
-            await setCurrentPosition();
-            ProgressRingTracarRota.IsActive = false;
-
-            if (routeResult != null)
-            {
-                Frame.Navigate(typeof(UnidadeRotaPage), routeResult);
-            }
-            else
-            {
-                if (podeProsseguir)
-                {
-                    List<Object> ListParameters = new List<Object>()
-                    {
-                         unidade.Nome,
-                         startPoint,
-                         endPoint,
-                    };
-                    Frame.Navigate(typeof(UnidadeRotaPage),ListParameters);
-                }
-                else
-                {
-                    await CriaAlerta("Não foi possível obter\na sua localização.");
-                }
-            }
-        }
-
-        private void Click_ListarRota(object sender, RoutedEventArgs e)
-        {
-            ListarRota();
+            ContentDialog popup = new ContentDialog();
+            popup.Title = titulo;
+            popup.Content = "Habilite a localização do seu\ndispositivo e tente novamente.";
+            popup.PrimaryButtonText = "Ok";
+            await popup.ShowAsync().AsTask().ConfigureAwait(false);
         }
     }
 }
