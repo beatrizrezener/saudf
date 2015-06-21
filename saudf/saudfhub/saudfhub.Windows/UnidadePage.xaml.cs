@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Net;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Documents;
 using System.Diagnostics;
+using Windows.System;
 
 namespace saudfhub
 {
@@ -167,11 +169,6 @@ namespace saudfhub
 
         }
 
-        private void Click_ReportarErro(object sender, RoutedEventArgs e)
-        {
-           
-        }
-
         #region NavigationHelper registration
 
         /// The methods provided in this section are simply used to allow
@@ -239,6 +236,11 @@ namespace saudfhub
             }
 
             Debug.WriteLine(messageTextBox.Text);
+        }
+
+        private async void Click_ReportarErro(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("mailto:beatrizrezener@gmail.com?subject=Reporte um erro ou dê uma sugestão&cc=jgbs@outlook.com"));
         }
     }
 }
