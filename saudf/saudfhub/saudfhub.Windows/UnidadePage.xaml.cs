@@ -193,20 +193,20 @@ namespace saudfhub
         private void Click_ListarRota(object sender, RoutedEventArgs e)
         {
             myMap.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            scrollView.Visibility = Windows.UI.Xaml.Visibility.Visible;
 
             messageTextBox.Text = "";
-            scrollView.Visibility = Windows.UI.Xaml.Visibility.Visible;
-            // Display summary info about the route.
+            
             messageTextBox.Inlines.Add(new Run()
             {
                 Text = "Tempo estimado (minutos) = "
-                  + directionsManager.RouteSummaryView
+                  + (response.Routes[0].TravelDuration / 60).ToString("F1")
             });
             messageTextBox.Inlines.Add(new LineBreak());
             messageTextBox.Inlines.Add(new Run()
             {
                 Text = "Distância (quilômetros) = "
-                  + response.Routes[0].TravelDuration.ToString()
+                  + (response.Routes[0].TravelDistance ).ToString("F1")
             });
             messageTextBox.Inlines.Add(new LineBreak());
             messageTextBox.Inlines.Add(new LineBreak());
@@ -219,9 +219,8 @@ namespace saudfhub
             messageTextBox.Inlines.Add(new LineBreak());
 
             var listItems = response.Routes[0].RouteLegs[0].ItineraryItems.ToList();
-            var items = response.Routes[0].RouteLegs[0].ItineraryItems.Count;
 
-            for (int i = 0; i < items; i++)
+            for (int i = 0; i < listItems.Count; i++)
             {
                 messageTextBox.Inlines.Add(new Run()
                 {
