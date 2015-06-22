@@ -75,7 +75,7 @@ namespace saudfhub
 
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            MapService.ServiceToken = "9sS3k8A_lN-OP2NWhVxW5g";
+            MapService.ServiceToken = "SKDFv604ms6mY1snIl6w2A";
             unidade = new UnidadeDAO().Buscar((int)e.NavigationParameter);
             TextBlockNome.Text = (unidade as Unidade).Nome;
             showUnidadeNoMapa();

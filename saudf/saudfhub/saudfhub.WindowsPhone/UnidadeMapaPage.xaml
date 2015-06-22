@@ -39,7 +39,7 @@
         
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
 
-            <Maps:MapControl x:Name="myMapControl" MapServiceToken="9sS3k8A_lN-OP2NWhVxW5g" HorizontalAlignment="Left" VerticalAlignment="Top" Height="469" Width="362"/>
+            <Maps:MapControl x:Name="myMapControl" MapServiceToken="SKDFv604ms6mY1snIl6w2A" HorizontalAlignment="Left" VerticalAlignment="Top" Height="469" Width="362"/>
             <ProgressRing x:Name="ProgressRingTracarRota" IsActive="False" Height="100" Width="100" />
 
         </Grid>

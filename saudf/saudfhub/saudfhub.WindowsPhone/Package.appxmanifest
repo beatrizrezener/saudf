@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="009c1e1b-4ec0-4c54-906f-368fe55fca42" Publisher="CN=beatriz.rezener" Version="1.0.0.0" />
-  <mp:PhoneIdentity PhoneProductId="009c1e1b-4ec0-4c54-906f-368fe55fca42" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="e0a5a8d8-ce95-43b6-95a8-44c99cd853ff" Publisher="CN=beatriz.rezener" Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="e0a5a8d8-ce95-43b6-95a8-44c99cd853ff" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>saudfhub.WindowsPhone</DisplayName>
     <PublisherDisplayName>beatriz.rezener</PublisherDisplayName>
